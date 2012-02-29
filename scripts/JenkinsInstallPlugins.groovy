@@ -3,10 +3,23 @@ import hudson.cli.CLI
 grailsHome = ant.project.properties."environment.GRAILS_HOME"
 includeTargets << new File ( "${grailsHome}/scripts/Init.groovy" )
 
-target(main: "The description of the script goes here!") {
+target(main: "Installs all the required plugins on the Jenkins server") {
 	depends(configureProxy, classpath)
 
-	runCliCommand('localhost:8080', ['help'])
+	runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'grails']) // Grails Plugin
+    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'subversion'])
+    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'git'])
+    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'setenv'])
+    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'copyartifact'])
+    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'port-allocator'])
+    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'build-pipeline-plugin'])
+//    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'violations'])
+    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'jobConfigHistory'])
+//    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'batch-task'])
+//    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'gradle'])
+//    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'groovy'])
+    
+    runCliCommand('http://33.33.33.10:8080', ['safe-restart'])
 }
 
 setDefaultTarget(main)
@@ -20,18 +33,7 @@ def runCliCommand(String rootUrl, List<String> args, InputStream input = System.
 /*
 
 create-job < config.xml
-
-wget http://localhost:8080/jnlpJars/jenkins-cli.jar
-java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin checkstyle
-java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin cloverphp
-java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin dry
-java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin htmlpublisher
-java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin jdepend
-java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin plot
-java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin pmd
-java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin violations
-java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin xunit
-java -jar jenkins-cli.jar -s http://localhost:8080 safe-restart
+https://wiki.jenkins-ci.org/display/JENKINS/Jenkins+Script+Console
 
 
   <project>-kickoff
