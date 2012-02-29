@@ -18,7 +18,7 @@ target(main: "Installs all the required plugins on the Jenkins server") {
 //    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'batch-task'])
 //    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'gradle'])
 //    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'groovy'])
-    
+    //extended-choice-parameter 
     runCliCommand('http://33.33.33.10:8080', ['safe-restart'])
 }
 
