@@ -17,6 +17,7 @@ grails.project.dependency.resolution = {
         // from public Maven repositories
         mavenCentral()
         //mavenLocal()
+	mavenRepo "http://maven.jenkins-ci.org/service/local/repositories/releases/content/"
         mavenRepo "http://snapshots.repository.codehaus.org"
         mavenRepo "http://repository.codehaus.org"
         mavenRepo "http://download.java.net/maven/2/"
@@ -26,7 +27,9 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
         // runtime 'mysql:mysql-connector-java:5.1.5'
-	build "org.jenkins-ci.main:cli:latest.integration"
+	//build "org.jenkins-ci.main:cli:latest.integration"
+	build "org.jenkins-ci.main:cli:1.452"
+
     }
 
     plugins {
