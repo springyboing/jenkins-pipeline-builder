@@ -5,7 +5,7 @@ build {
     desc "My First Desc"
 
     scms {
-        "hudson.plugins.git.GitSCM" {
+        git {
             configVersion 2
             userRemoteConfigs {
                 "hudson.plugins.git.UserRemoteConfig" {
@@ -20,58 +20,58 @@ build {
             disableSubmodules false
             recursiveSubmodules false
             doGenerateSubmoduleConfigurations false
-            authorOrCommitter false authorOrCommitter
+            authorOrCommitter false
             clean false
             wipeOutWorkspace false
             pruneBranches false
-            remotePollfalse
-            buildChooser class: "hudson.plugins.git.util.DefaultBuildChooser"
+            remotePollfalse false
+            buildChooserClass "hudson.plugins.git.util.DefaultBuildChooser"
             gitTool 'Default'
-            submoduleCfg class="list"
-            relativeTargetDir
-            reference
-            excludedRegions
-            excludedUsers
-            gitConfigName
-            gitConfigEmail
+            submoduleCfgClass "list"
+            relativeTargetDir ''
+            reference ''
+            excludedRegions ''
+            excludedUsers ''
+            gitConfigName ''
+            gitConfigEmail ''
             skipTag false
-            includedRegions
-            scmName
+            includedRegions ''
+            scmName ''
         }
     }
     triggers {
-        "hudson.triggers.SCMTrigger"() {
-            spec "5 * * * *"
-        }
+//        "hudson.triggers.SCMTrigger"() {
+//            spec "5 * * * *"
+//        }
     }
     builders {
-        "com.g2one.hudson.grails.GrailsBuilder" {
+        grails {
             name "(Default)"
             targets "test-app unit:"
-            grailsWorkDir
-            projectWorkDi
-            projectBaseDir
-            serverPort "$GRAILS_HTTP_PORT"
-            properties [:]
+            grailsWorkDir ''
+            projectWorkDir ''
+            projectBaseDir ''
+            serverPort ""
+            properties ''
             forceUpgrade false
             nonInteractive true
         }
-        "hudson.plugins.copyartifact.CopyArtifact" {
+        copyArtifact {
             projectName: 'BobJob-1330875179638'
             filter
             target
-            selector "hudson.plugins.copyartifact.TriggeredBuildSelector"
+            selectorClass "hudson.plugins.copyartifact.TriggeredBuildSelector"
         }
     }
     publishers {
-        "hudson.tasks.ArtifactArchiver" {
+        artifactArchiver {
             artifacts "/target"
             latestOnly false
         }
     }
     buildWrappers {
-        "org.jvnet.hudson.plugins.port__allocator.PortAllocator" {
-            ports("org.jvnet.hudson.plugins.port__allocator.DefaultPortType") {
+        portAllocator {
+            ports {
                 name 'GRAILS_HTTP_PORT'
             }
         }
