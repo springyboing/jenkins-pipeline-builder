@@ -1,6 +1,9 @@
 package uk.co.accio.jenkins
 
-class BuilderDelegate {
+class BuilderDelegate  implements Buildable {
+
+    String topLevelElement = 'builder'
+    def builders = []
 
     BuilderDelegate() {
     }
@@ -10,6 +13,7 @@ class BuilderDelegate {
         cl.resolveStrategy = Closure.DELEGATE_FIRST
         cl()
 
+        builders << cl.delegate
         println "Grails: "
     }
     void copyArtifact(Closure cl) {
@@ -17,6 +21,17 @@ class BuilderDelegate {
         cl.resolveStrategy = Closure.DELEGATE_FIRST
         cl()
 
+        builders << cl.delegate
         println "copyArtifact: "
+    }
+
+    def void build(GroovyObject builder) {
+        def obj = {
+            "${topLevelElement}" {
+                out << builders
+            }
+        }
+        obj.delegate = builder
+        obj()
     }
 }

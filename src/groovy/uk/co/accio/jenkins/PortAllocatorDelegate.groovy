@@ -14,7 +14,7 @@ class PortAllocatorDelegate implements Buildable {
     def ports = []
 
     void ports(Closure cl) {
-        def delegate = new PortAllocatorDelegate()
+        def delegate = new DefaultPortAllocatorDelegate()
         ports << delegate
         cl.delegate = delegate
         cl.resolveStrategy = Closure.DELEGATE_FIRST
@@ -25,8 +25,11 @@ class PortAllocatorDelegate implements Buildable {
 
     def void build(GroovyObject builder) {
         def obj = {
-            "${topLevelElement}"() {
-            }
+//            'ports'() {
+                "${topLevelElement}"() {
+                    out << ports
+                }
+//            }
         }
         obj.delegate = builder
         obj()
@@ -36,6 +39,10 @@ class PortAllocatorDelegate implements Buildable {
 
         String topLevelElement = "org.jvnet.hudson.plugins.port__allocator.DefaultPortType"
         String name
+
+        void name(name) {
+            this.name = name
+        }
 
         def void build(GroovyObject builder) {
             def obj = {

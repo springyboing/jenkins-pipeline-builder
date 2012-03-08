@@ -14,7 +14,7 @@ class ArtifactArchiverDelegate implements Buildable {
         this.latestOnly = latestOnly
     }
 
-    def void build(GroovyObject builder){
+    def void build(GroovyObject builder) {
         def obj = {
             "${topLevelElement}"() {
                 'artifacts'(artifacts)

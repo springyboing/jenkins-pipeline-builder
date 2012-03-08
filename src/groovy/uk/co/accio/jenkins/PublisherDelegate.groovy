@@ -2,28 +2,23 @@ package uk.co.accio.jenkins
 
 class PublisherDelegate implements Buildable {
 
-    String topLevelElement = "hudson.tasks.ArtifactArchiver"
+    String topLevelElement = "publisher"
+
+    def artifactArchiver
 
     void artifactArchiver(Closure cl) {
         cl.delegate = new ArtifactArchiverDelegate()
         cl.resolveStrategy = Closure.DELEGATE_FIRST
         cl()
 
+        artifactArchiver = cl.delegate
         println "ArtifactArchiver: "
     }
 
     def void build(GroovyObject builder){
         def obj = {
             "${topLevelElement}"() {
-                'targets'(targets)
-                'name'(name)
-                'grailsWorkDir'(grailsWorkDir)
-                'projectWorkDir'(projectWorkDir)
-                'projectBaseDir'(projectBaseDir)
-                'serverPort'(serverPort)
-                'properties'(props)
-                'forceUpgrade'(forceUpgrade)
-                'nonInteractive'(nonInteractive)
+                out << artifactArchiver
             }
         }
         obj.delegate = builder

@@ -6,11 +6,15 @@ import groovy.xml.XmlUtil
 class BuildConfiguration {
 
     static void main(String[] args) {
-        runArchitectureRules(new File("src/notes/MyBuild.groovy"))
+        runJenkinsBuilder(new File("src/notes/MyBuild.groovy"))
     }
 
-    static void runArchitectureRules(File dsl) {
-        Script dslScript = new GroovyShell().parse(dsl.text)
+    static void runJenkinsBuilder(File dsl) {
+        runJenkinsBuilder(dsl.text)
+    }
+
+    static void runJenkinsBuilder(String text) {
+        Script dslScript = new GroovyShell().parse(text)
 
         def jkBuild
 

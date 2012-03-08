@@ -10,7 +10,6 @@ class JkBuildDelegate implements Buildable {
     Boolean blockBuildWhenDownstreamBuilding = false
     Boolean blockBuildWhenUpstreamBuilding = false
     Boolean concurrentBuild = false
-    Boolean nonInteractive
 
     def scmDelegate
     def triggerDelegate
@@ -104,14 +103,16 @@ class JkBuildDelegate implements Buildable {
                 'blockBuildWhenDownstreamBuilding'(blockBuildWhenDownstreamBuilding)
                 'blockBuildWhenUpstreamBuilding'(blockBuildWhenUpstreamBuilding)
                 'concurrentBuild'(concurrentBuild)
-                'nonInteractive'(nonInteractive)
                 'actions'()
                 'scm'(class: 'hudson.scm.NullSCM')
                 'triggers'(class: 'vector')
                 'builders'(){}
                 'publishers'(){}
-                'buildWrappers'(){}
+                out << scmDelegate
+                out << triggerDelegate
                 out << builderDelegate
+                out << buildWrapperDelegate
+                out << publisherDelegate
             }
         }
         obj.delegate = builder

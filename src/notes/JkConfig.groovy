@@ -74,9 +74,5 @@ build {
             type = DefaultPortType
             ports = 'GRAILS_HTTP_PORT'
         }
-
     }
-
-
-
 }

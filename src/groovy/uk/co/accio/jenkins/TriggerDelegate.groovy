@@ -10,7 +10,7 @@ class TriggerDelegate implements Buildable {
     def void build(GroovyObject builder) {
         def obj = {
             "${topLevelElement}"(class: 'vector') {
-                'name'("TODO")
+                'name'("TODO") {}
             }
         }
         obj.delegate = builder
