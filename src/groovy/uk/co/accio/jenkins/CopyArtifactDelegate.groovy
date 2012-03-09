@@ -45,10 +45,10 @@ class CopyArtifactDelegate implements Buildable {
 
     def void build(GroovyObject builder){
         def obj = {
-            "${topLevelElement}"() {
-                'projectName'(projectName)
-                'filter'(filter)
-                'target'(target)
+            "${topLevelElement}"([:]) {
+                'projectName'(projectName, [:])
+                'filter'(filter, [:])
+                'target'(target, [:])
                 'selector'(class: selectorClass)
             }
         }

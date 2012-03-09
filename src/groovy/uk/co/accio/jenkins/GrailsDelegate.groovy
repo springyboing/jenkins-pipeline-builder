@@ -22,60 +22,60 @@ class GrailsDelegate implements Buildable {
     GrailsDelegate(){
     }
 
-    String topLevelElement = 'com.g2one.hudson.grails.GrailsBuilder'
-    String name = '(Default)'
-    String targets
-    String grailsWorkDir
-    String projectWorkDir
-    String projectBaseDir
-    String serverPort
-    String props
-    Boolean forceUpgrade = true
-    Boolean nonInteractive = true
+    String _topLevelElement = 'com.g2one.hudson.grails.GrailsBuilder'
+    String _name = '(Default)'
+    String _targets
+    String _grailsWorkDir
+    String _projectWorkDir
+    String _projectBaseDir
+    String _serverPort
+    String _properties
+    Boolean _forceUpgrade = true
+    Boolean _nonInteractive = true
 
     void topLevelElement(tle) {
-        this.topLevelElement = tle
+        this._topLevelElement = tle
     }
     void name(name) {
-        this.name = name
+        this._name = name
     }
     void targets(targets) {
-        this.targets = targets
+        this._targets = targets
     }
     void grailsWorkDir(grailsWorkDir){
-        this.grailsWorkDir = grailsWorkDir
+        this._grailsWorkDir = grailsWorkDir
     }
     void projectWorkDir(projectWorkDir) {
-        this.projectWorkDir = projectWorkDir
+        this._projectWorkDir = projectWorkDir
     }
     void projectBaseDir(projectBaseDir){
-        this.projectBaseDir = projectBaseDir
+        this._projectBaseDir = projectBaseDir
     }
     void serverPort(serverPort) {
-        this.serverPort = serverPort
+        this._serverPort = serverPort
     }
     void properties(props) {
-        this.props = props
+        this._properties = props
     }
     void forceUpgrade(Boolean forceUpgrade) {
-        this.forceUpgrade = forceUpgrade
+        this._forceUpgrade = forceUpgrade
     }
     void nonInteractive(Boolean nonInteractive) {
-        this.nonInteractive = nonInteractive
+        this._nonInteractive = nonInteractive
     }
 
     def void build(GroovyObject builder){
         def obj = {
-            "${topLevelElement}"() {
-                'targets'(targets)
-                'name'(name)
-                'grailsWorkDir'(grailsWorkDir)
-                'projectWorkDir'(projectWorkDir)
-                'projectBaseDir'(projectBaseDir)
-                'serverPort'(serverPort)
-                'properties'(props)
-                'forceUpgrade'(forceUpgrade)
-                'nonInteractive'(nonInteractive)
+            "${_topLevelElement}"([:]) {
+                'targets'(_targets, [:])
+                'name'(_name, [:])
+                'grailsWorkDir'(_grailsWorkDir, [:])
+                'projectWorkDir'(_projectWorkDir, [:])
+                'projectBaseDir'(_projectBaseDir, [:])
+                'serverPort'(_serverPort, [:])
+                'properties'(_properties, [:])
+                'forceUpgrade'(_forceUpgrade, [:])
+                'nonInteractive'(_nonInteractive, [:])
             }
         }
         obj.delegate = builder

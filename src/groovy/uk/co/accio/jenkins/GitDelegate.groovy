@@ -37,8 +37,8 @@ class GitDelegate implements Buildable {
     def void build(GroovyObject builder) {
         def obj = {
             "scm"(class: topLevelElement) {
-                configVersion(_configVersion)
-                scmName(_scmName)
+                configVersion(_configVersion, [:])
+                scmName(_scmName, [:])
                 userRemoteConfigs(_userRemoteConfigs)
                 branches(_branches)
                 disableSubmodules(_disableSubmodules)
