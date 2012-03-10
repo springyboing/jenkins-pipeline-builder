@@ -1,9 +1,16 @@
-package uk.co.accio.jenkins.bpl
+package uk.co.accio.jenkins.bpl.dsl
 
-import grails.plugin.spock.*
-import org.custommonkey.xmlunit.*
+import grails.plugin.spock.UnitSpec
+import org.custommonkey.xmlunit.Diff
+import org.custommonkey.xmlunit.XMLUnit
 
 class ConfigFileSpec extends UnitSpec {
+
+    def setupSpec() {
+        XMLUnit.setIgnoreWhitespace(true)
+        XMLUnit.setNormalizeWhitespace(true)
+        XMLUnit.setNormalize(true)
+    }
 
     def "compair simplest config file possible"() {
         setup:
@@ -30,25 +37,6 @@ class ConfigFileSpec extends UnitSpec {
 
         then:
             xmlDiff.identical()
-            //xmlDiff.similar()
-    }
-
-    def "create simplest config file possible"() {
-        setup:
-            String expectedXml = loadFile('config-minimal.xml')
-            String dsl = """build {
-                                name "Billy"
-                                desc "My First Desc"
-                            }
-                         """
-            String generatedXml = ''//uk.co.accio.jenkins.dsl.BuildConfiguration.runJenkinsBuilder(dsl)
-
-        when:
-            def xmlDiff = new Diff(generatedXml, expectedXml)
-
-        then:
-            xmlDiff.identical()
-            //xmlDiff.similar()
     }
 
     String loadFile(name) {

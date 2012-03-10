@@ -3,35 +3,23 @@ package uk.co.accio.jenkins.dsl.triggers
 class TriggerDelegate implements Buildable {
 
     String topLevelElement = 'triggers'
-
-    TriggerDelegate(){
-    }
+    def triggers = []
 
     def void build(GroovyObject builder) {
         def obj = {
             "${topLevelElement}"(class: 'vector') {
-                'name'("TODO") {}
+                out << triggers
             }
         }
         obj.delegate = builder
         obj()
     }
 
-    def methodMissing(String name, Object args) {
-//		if (args.length == 1) {
-//			if (args[0] instanceof Closure) {
-//
-//				args[0].delegate = new RuleDelegate(rule)
-//				args[0].resolveStrategy = Closure.DELEGATE_FIRST
-//
-//				args[0]()
-//
-//				this.configuration.addRule rule
-//			} else {
-//				throw new MissingMethodException(name, this.class, args as Object[])
-//			}
-//		} else {
-//			throw new MissingMethodException(name, this.class, args as Object[])
-//		}
-	}
+    void scm(Closure cl) {
+        cl.delegate = new ScmDelegate()
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        triggers << cl.delegate
+    }
 }

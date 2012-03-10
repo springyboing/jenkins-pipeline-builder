@@ -5,6 +5,7 @@ import uk.co.accio.jenkins.dsl.scms.git.GitDelegate
 
 class ScmDelegate implements Buildable {
 
+    String topLevelElementClassIfEmpty = "hudson.scm.NullSCM"
     def scmList = []
     def gitDelegate
 
@@ -29,10 +30,8 @@ class ScmDelegate implements Buildable {
 
     def void build(GroovyObject builder) {
         def obj = {
-            "scm" {
-                out << gitDelegate
-                //out << scmList
-            }
+            out << gitDelegate
+            //out << scmList
         }
         obj.delegate = builder
         obj()

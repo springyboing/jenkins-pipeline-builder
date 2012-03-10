@@ -1,4 +1,4 @@
-package uk.co.accio.jenkins.bpl
+package uk.co.accio.jenkins.bpl.dsl.builders
 
 import grails.plugin.spock.UnitSpec
 import groovy.xml.StreamingMarkupBuilder
@@ -7,10 +7,15 @@ import org.custommonkey.xmlunit.DetailedDiff
 import org.custommonkey.xmlunit.Diff
 import org.custommonkey.xmlunit.Difference
 import org.custommonkey.xmlunit.XMLUnit
-
 import uk.co.accio.jenkins.dsl.builders.GrailsDelegate
 
 class GrailsSpec extends UnitSpec {
+
+    def setupSpec() {
+        XMLUnit.setIgnoreWhitespace(true)
+        XMLUnit.setNormalizeWhitespace(true)
+        XMLUnit.setNormalize(true)
+    }
 
     def grailsBuilderXml = '''\
 <?xml version="1.0" encoding="UTF-8"?>
@@ -30,23 +35,19 @@ class GrailsSpec extends UnitSpec {
     def 'Grails Builder XML'() {
 
         given:
-            XMLUnit.setIgnoreWhitespace(true)
-            XMLUnit.setNormalizeWhitespace(true)
-            XMLUnit.setNormalize(true)
-
-            def grailsDelegate = new GrailsDelegate()
-            grailsDelegate._targets = 'test-app unit:'
-            grailsDelegate._name = "(Default)"
-            grailsDelegate._grailsWorkDir = './grailsWorkDir'
-            grailsDelegate._projectWorkDir = './projectWorkDir'
-            grailsDelegate._projectBaseDir = './projectBaseDir'
-            grailsDelegate._serverPort = '$GRAILS_HTTP_PORT'
-            grailsDelegate._properties = "propsA,propsB"
-            grailsDelegate._forceUpgrade = true
-            grailsDelegate._nonInteractive = true
+            def delegate = new GrailsDelegate()
+            delegate._targets = 'test-app unit:'
+            delegate._name = "(Default)"
+            delegate._grailsWorkDir = './grailsWorkDir'
+            delegate._projectWorkDir = './projectWorkDir'
+            delegate._projectBaseDir = './projectBaseDir'
+            delegate._serverPort = '$GRAILS_HTTP_PORT'
+            delegate._properties = "propsA,propsB"
+            delegate._forceUpgrade = true
+            delegate._nonInteractive = true
 
         when:
-            def theXml = toXml(grailsDelegate)
+            def theXml = toXml(delegate)
             def xmlDiff = new Diff(theXml, XmlUtil.serialize(grailsBuilderXml))
             DetailedDiff dd = new DetailedDiff(xmlDiff)
             dd.getAllDifferences().each {

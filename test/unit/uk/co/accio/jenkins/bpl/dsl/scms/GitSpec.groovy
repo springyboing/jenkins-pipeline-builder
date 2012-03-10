@@ -1,17 +1,23 @@
-package uk.co.accio.jenkins.bpl
+package uk.co.accio.jenkins.bpl.dsl.scms
 
 import grails.plugin.spock.UnitSpec
-import uk.co.accio.jenkins.dsl.scms.git.GitDelegate
 import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil
-import org.custommonkey.xmlunit.Diff
-import uk.co.accio.jenkins.dsl.scms.git.GitBranchDelegate
-import uk.co.accio.jenkins.dsl.scms.git.GitUserRemoteConfigDelegate
-import org.custommonkey.xmlunit.XMLUnit
 import org.custommonkey.xmlunit.DetailedDiff
+import org.custommonkey.xmlunit.Diff
 import org.custommonkey.xmlunit.Difference
+import org.custommonkey.xmlunit.XMLUnit
+import uk.co.accio.jenkins.dsl.scms.git.GitBranchDelegate
+import uk.co.accio.jenkins.dsl.scms.git.GitDelegate
+import uk.co.accio.jenkins.dsl.scms.git.GitUserRemoteConfigDelegate
 
-class ScmSpec extends UnitSpec {
+class GitSpec extends UnitSpec {
+
+    def setupSpec() {
+        XMLUnit.setIgnoreWhitespace(true)
+        XMLUnit.setNormalizeWhitespace(true)
+        XMLUnit.setNormalize(true)
+    }
 
     def gitScmXml = '''\
 <?xml version="1.0" encoding="UTF-8"?>
@@ -55,25 +61,21 @@ class ScmSpec extends UnitSpec {
     def 'Git XML'() {
 
         given:
-            XMLUnit.setIgnoreWhitespace(true)
-            XMLUnit.setNormalizeWhitespace(true)
-            XMLUnit.setNormalize(true)
-
-            def gitD = new GitDelegate()
-            gitD._scmName = 'HelloWorld'
-            gitD._configVersion = 36
-            gitD._gitConfigName = 'Joe Blogs'
-            gitD._gitConfigEmail = 'joe@blogs.com'
-            gitD._relativeTargetDir = 'A'
-            gitD._reference = 'B'
-            gitD._excludedRegions = 'C'
-            gitD._excludedUsers = 'D'
-            gitD._includedRegions = 'E'
-            gitD._branches << new GitBranchDelegate(_name: 'master')
-            gitD._userRemoteConfigs << new GitUserRemoteConfigDelegate(_name: 'MyGitRemote', _refspec: '/ref/HEAD', _url: 'git://github.com/springyboing/jenkins-pipeline-builder.git')
+            def delegate = new GitDelegate()
+            delegate._scmName = 'HelloWorld'
+            delegate._configVersion = 36
+            delegate._gitConfigName = 'Joe Blogs'
+            delegate._gitConfigEmail = 'joe@blogs.com'
+            delegate._relativeTargetDir = 'A'
+            delegate._reference = 'B'
+            delegate._excludedRegions = 'C'
+            delegate._excludedUsers = 'D'
+            delegate._includedRegions = 'E'
+            delegate._branches << new GitBranchDelegate(_name: 'master')
+            delegate._userRemoteConfigs << new GitUserRemoteConfigDelegate(_name: 'MyGitRemote', _refspec: '/ref/HEAD', _url: 'git://github.com/springyboing/jenkins-pipeline-builder.git')
 
         when:
-            def theXml = toXml(gitD)
+            def theXml = toXml(delegate)
             def xmlDiff = new Diff(theXml, XmlUtil.serialize(gitScmXml))
             DetailedDiff dd = new DetailedDiff(xmlDiff)
             dd.getAllDifferences().each {

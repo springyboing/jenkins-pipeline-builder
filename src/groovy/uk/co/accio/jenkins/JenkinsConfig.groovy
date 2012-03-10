@@ -15,7 +15,7 @@ class JenkinsConfig {
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
   <triggers class="vector"/>
   <concurrentBuild>false</concurrentBuild>
-  <builders/>
+  <dsl.builders/>
   <publishers/>
   <buildWrappers/>
 </project>'''
@@ -23,7 +23,7 @@ class JenkinsConfig {
     def xml = new XmlParser().parse(configMin)
 
     void addbuilder(String name, String value) {
-       // xml.project[0].builders.
+       // xml.project[0].dsl.builders.
     }
 
     void addNode(String name, String value) {

@@ -2,7 +2,7 @@ package uk.co.accio.jenkins.dsl.builders
 
 /**
  *
- *<builders>
+ *<dsl.builders>
     <com.g2one.hudson.grails.GrailsBuilder>
       <targets>test-app unit:</targets>
       <name>(Default)</name>
@@ -14,7 +14,7 @@ package uk.co.accio.jenkins.dsl.builders
       <forceUpgrade>false</forceUpgrade>
       <nonInteractive>true</nonInteractive>
     </com.g2one.hudson.grails.GrailsBuilder>
-  </builders>
+  </dsl.builders>
  *
  */
 class GrailsDelegate implements Buildable {

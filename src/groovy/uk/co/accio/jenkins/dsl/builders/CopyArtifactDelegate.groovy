@@ -3,14 +3,14 @@ package uk.co.accio.jenkins.dsl.builders
 /**
  *
  *
- * <builders>
+ * <dsl.builders>
     <hudson.plugins.copyartifact.CopyArtifact>
       <projectName>BobJob-1330875179638</projectName>
       <filter></filter>
       <target></target>
       <selector class="hudson.plugins.copyartifact.TriggeredBuildSelector"/>
     </hudson.plugins.copyartifact.CopyArtifact>
-  </builders>
+  </dsl.builders>
  *
  *
  */

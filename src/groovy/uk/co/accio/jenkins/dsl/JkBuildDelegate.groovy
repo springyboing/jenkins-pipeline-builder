@@ -112,7 +112,7 @@ class JkBuildDelegate implements Buildable {
                 'actions'()
                 'scm'(class: 'hudson.scm.NullSCM')
                 'triggers'(class: 'vector')
-                'builders'(){}
+                'dsl.builders'(){}
                 'publishers'(){}
                 out << scmDelegate
                 out << triggerDelegate

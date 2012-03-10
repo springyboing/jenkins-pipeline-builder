@@ -1,4 +1,4 @@
-package uk.co.accio.jenkins.bpl
+package uk.co.accio.jenkins.bpl.dsl.builders
 
 import grails.plugin.spock.UnitSpec
 import groovy.xml.StreamingMarkupBuilder
@@ -7,10 +7,15 @@ import org.custommonkey.xmlunit.DetailedDiff
 import org.custommonkey.xmlunit.Diff
 import org.custommonkey.xmlunit.Difference
 import org.custommonkey.xmlunit.XMLUnit
-
 import uk.co.accio.jenkins.dsl.builders.CopyArtifactDelegate
 
 class CopyArtifactSpec extends UnitSpec {
+
+    def setupSpec() {
+        XMLUnit.setIgnoreWhitespace(true)
+        XMLUnit.setNormalizeWhitespace(true)
+        XMLUnit.setNormalize(true)
+    }
 
     def copyArtifactXml = '''\
 <?xml version="1.0" encoding="UTF-8"?>
@@ -25,17 +30,13 @@ class CopyArtifactSpec extends UnitSpec {
     def 'Copy Artifact Builder XML'() {
 
         given:
-            XMLUnit.setIgnoreWhitespace(true)
-            XMLUnit.setNormalizeWhitespace(true)
-            XMLUnit.setNormalize(true)
-
-            def copyArtifactDelegate = new CopyArtifactDelegate()
-            copyArtifactDelegate.projectName = 'BobJob-1330875179638'
-            copyArtifactDelegate.filter = "/**/*"
-            copyArtifactDelegate.target = 'blur'
+            def delegate = new CopyArtifactDelegate()
+            delegate.projectName = 'BobJob-1330875179638'
+            delegate.filter = "/**/*"
+            delegate.target = 'blur'
 
         when:
-            def theXml = toXml(copyArtifactDelegate)
+            def theXml = toXml(delegate)
             def xmlDiff = new Diff(theXml, XmlUtil.serialize(copyArtifactXml))
             DetailedDiff dd = new DetailedDiff(xmlDiff)
             dd.getAllDifferences().each {

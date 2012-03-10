@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>My Description</description>
+  <displayName>Hello World Display Name</displayName>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>Hello</name>
+          <description>Tim</description>
+          <defaultValue>World</defaultValue>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.scm.SubversionSCM">
+    <locations/>
+    <excludedRegions></excludedRegions>
+    <includedRegions></includedRegions>
+    <excludedUsers></excludedUsers>
+    <excludedRevprop>asdas</excludedRevprop>
+    <excludedCommitMessages>asdas</excludedCommitMessages>
+    <workspaceUpdater class="hudson.scm.subversion.UpdateUpdater"/>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>true</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers class="vector">
+    <hudson.triggers.TimerTrigger>
+      <spec>5 * * * *</spec>
+    </hudson.triggers.TimerTrigger>
+    <hudson.triggers.SCMTrigger>
+      <spec>5 * * * *</spec>
+    </hudson.triggers.SCMTrigger>
+  </triggers>
+  <concurrentBuild>true</concurrentBuild>
+  <builders>
+    <com.g2one.hudson.grails.GrailsBuilder>
+      <targets>test-app unit:</targets>
+      <name>(Default)</name>
+      <grailsWorkDir></grailsWorkDir>
+      <projectWorkDir></projectWorkDir>
+      <projectBaseDir></projectBaseDir>
+      <serverPort>$GRAILS_HTTP_PORT</serverPort>
+      <properties></properties>
+      <forceUpgrade>false</forceUpgrade>
+      <nonInteractive>true</nonInteractive>
+    </com.g2one.hudson.grails.GrailsBuilder>
+    <hudson.plugins.copyartifact.CopyArtifact>
+      <projectName>BobJob-1330875179638</projectName>
+      <filter></filter>
+      <target></target>
+      <selector class="hudson.plugins.copyartifact.TriggeredBuildSelector"/>
+    </hudson.plugins.copyartifact.CopyArtifact>
+    <hudson.tasks.Shell>
+      <command>ls -alsh</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.tasks.test.AggregatedTestResultPublisher>
+      <includeFailedBuilds>true</includeFailedBuilds>
+    </hudson.tasks.test.AggregatedTestResultPublisher>
+    <hudson.tasks.ArtifactArchiver>
+      <artifacts>/target</artifacts>
+      <latestOnly>false</latestOnly>
+    </hudson.tasks.ArtifactArchiver>
+    <hudson.tasks.BuildTrigger>
+      <childProjects>BobJob-1330875179638</childProjects>
+      <threshold>
+        <name>SUCCESS</name>
+        <ordinal>0</ordinal>
+        <color>BLUE</color>
+      </threshold>
+    </hudson.tasks.BuildTrigger>
+    <hudson.tasks.junit.JUnitResultArchiver>
+      <testResults>sadsadasdasd</testResults>
+      <keepLongStdio>true</keepLongStdio>
+      <testDataPublishers/>
+    </hudson.tasks.junit.JUnitResultArchiver>
+    <hudson.tasks.JavadocArchiver>
+      <javadocDir>sadasdasdas</javadocDir>
+      <keepAll>false</keepAll>
+    </hudson.tasks.JavadocArchiver>
+    <hudson.tasks.Fingerprinter>
+      <targets>sadsadsadasdas</targets>
+      <recordBuildArtifacts>false</recordBuildArtifacts>
+    </hudson.tasks.Fingerprinter>
+    <hudson.plugins.git.GitPublisher>
+      <configVersion>2</configVersion>
+      <pushMerge>true</pushMerge>
+      <pushOnlyIfSuccess>true</pushOnlyIfSuccess>
+    </hudson.plugins.git.GitPublisher>
+    <au.com.centrumsystems.hudson.plugin.buildpipeline.trigger.BuildPipelineTrigger>
+      <downstreamProjectNames>BobJob-1330875179638</downstreamProjectNames>
+    </au.com.centrumsystems.hudson.plugin.buildpipeline.trigger.BuildPipelineTrigger>
+    <hudson.tasks.Mailer>
+      <recipients>sdsadsadASD@dsadas.com</recipients>
+      <dontNotifyEveryUnstableBuild>false</dontNotifyEveryUnstableBuild>
+      <sendToIndividuals>true</sendToIndividuals>
+    </hudson.tasks.Mailer>
+  </publishers>
+  <buildWrappers>
+    <org.jvnet.hudson.plugins.port__allocator.PortAllocator>
+      <ports>
+        <org.jvnet.hudson.plugins.port__allocator.DefaultPortType>
+          <name>GRAILS_HTTP_PORT</name>
+        </org.jvnet.hudson.plugins.port__allocator.DefaultPortType>
+      </ports>
+    </org.jvnet.hudson.plugins.port__allocator.PortAllocator>
+  </buildWrappers>
+</project>
