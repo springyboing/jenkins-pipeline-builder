@@ -1,4 +1,6 @@
-package uk.co.accio.jenkins
+package uk.co.accio.jenkins.dsl.wrappers
+
+import uk.co.accio.jenkins.dsl.wrappers.PortAllocatorDelegate
 
 class BuilderWrapperDelegate implements Buildable {
 

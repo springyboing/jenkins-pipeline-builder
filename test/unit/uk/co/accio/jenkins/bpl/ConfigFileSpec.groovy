@@ -41,7 +41,7 @@ class ConfigFileSpec extends UnitSpec {
                                 desc "My First Desc"
                             }
                          """
-            String generatedXml = ''//uk.co.accio.jenkins.BuildConfiguration.runJenkinsBuilder(dsl)
+            String generatedXml = ''//uk.co.accio.jenkins.dsl.BuildConfiguration.runJenkinsBuilder(dsl)
 
         when:
             def xmlDiff = new Diff(generatedXml, expectedXml)

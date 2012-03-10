@@ -7,11 +7,8 @@ import org.custommonkey.xmlunit.DetailedDiff
 import org.custommonkey.xmlunit.Diff
 import org.custommonkey.xmlunit.Difference
 import org.custommonkey.xmlunit.XMLUnit
-import uk.co.accio.jenkins.GitBranchDelegate
-import uk.co.accio.jenkins.GitDelegate
-import uk.co.accio.jenkins.GitUserRemoteConfigDelegate
-import spock.lang.Ignore
-import uk.co.accio.jenkins.GrailsDelegate
+
+import uk.co.accio.jenkins.dsl.builders.GrailsDelegate
 
 class GrailsSpec extends UnitSpec {
 

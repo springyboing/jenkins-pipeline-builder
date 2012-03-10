@@ -1,4 +1,10 @@
-package uk.co.accio.jenkins
+package uk.co.accio.jenkins.dsl
+
+import uk.co.accio.jenkins.dsl.triggers.TriggerDelegate
+import uk.co.accio.jenkins.dsl.scms.ScmDelegate
+import uk.co.accio.jenkins.dsl.builders.BuilderDelegate
+import uk.co.accio.jenkins.dsl.wrappers.BuilderWrapperDelegate
+import uk.co.accio.jenkins.dsl.publishers.PublisherDelegate
 
 class JkBuildDelegate implements Buildable {
 

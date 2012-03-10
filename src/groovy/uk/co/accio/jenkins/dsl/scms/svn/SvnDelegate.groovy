@@ -1,4 +1,4 @@
-package uk.co.accio.jenkins
+package uk.co.accio.jenkins.dsl.scms.svn
 
 class SvnDelegate implements Buildable {
 

@@ -1,12 +1,12 @@
 package uk.co.accio.jenkins.bpl
 
 import grails.plugin.spock.UnitSpec
-import uk.co.accio.jenkins.GitDelegate
+import uk.co.accio.jenkins.dsl.scms.git.GitDelegate
 import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil
 import org.custommonkey.xmlunit.Diff
-import uk.co.accio.jenkins.GitBranchDelegate
-import uk.co.accio.jenkins.GitUserRemoteConfigDelegate
+import uk.co.accio.jenkins.dsl.scms.git.GitBranchDelegate
+import uk.co.accio.jenkins.dsl.scms.git.GitUserRemoteConfigDelegate
 import org.custommonkey.xmlunit.XMLUnit
 import org.custommonkey.xmlunit.DetailedDiff
 import org.custommonkey.xmlunit.Difference

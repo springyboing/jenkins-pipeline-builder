@@ -7,8 +7,8 @@ import org.custommonkey.xmlunit.DetailedDiff
 import org.custommonkey.xmlunit.Diff
 import org.custommonkey.xmlunit.Difference
 import org.custommonkey.xmlunit.XMLUnit
-import uk.co.accio.jenkins.GrailsDelegate
-import uk.co.accio.jenkins.CopyArtifactDelegate
+
+import uk.co.accio.jenkins.dsl.builders.CopyArtifactDelegate
 
 class CopyArtifactSpec extends UnitSpec {
 

@@ -1,4 +1,4 @@
-package uk.co.accio.jenkins
+package uk.co.accio.jenkins.dsl
 
 import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil

@@ -1,4 +1,7 @@
-package uk.co.accio.jenkins
+package uk.co.accio.jenkins.dsl.scms
+
+import uk.co.accio.jenkins.dsl.scms.svn.SvnDelegate
+import uk.co.accio.jenkins.dsl.scms.git.GitDelegate
 
 class ScmDelegate implements Buildable {
 

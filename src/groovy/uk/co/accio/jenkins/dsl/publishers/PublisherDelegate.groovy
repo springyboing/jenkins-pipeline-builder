@@ -1,4 +1,4 @@
-package uk.co.accio.jenkins
+package uk.co.accio.jenkins.dsl.publishers
 
 class PublisherDelegate implements Buildable {
 
