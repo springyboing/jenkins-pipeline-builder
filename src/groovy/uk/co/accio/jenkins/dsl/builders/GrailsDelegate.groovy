@@ -19,9 +19,6 @@ package uk.co.accio.jenkins.dsl.builders
  */
 class GrailsDelegate implements Buildable {
 
-    GrailsDelegate(){
-    }
-
     String _topLevelElement = 'com.g2one.hudson.grails.GrailsBuilder'
     String _name = '(Default)'
     String _targets
@@ -42,7 +39,7 @@ class GrailsDelegate implements Buildable {
     void targets(targets) {
         this._targets = targets
     }
-    void grailsWorkDir(grailsWorkDir){
+    void grailsWorkDir(String grailsWorkDir) {
         this._grailsWorkDir = grailsWorkDir
     }
     void projectWorkDir(projectWorkDir) {

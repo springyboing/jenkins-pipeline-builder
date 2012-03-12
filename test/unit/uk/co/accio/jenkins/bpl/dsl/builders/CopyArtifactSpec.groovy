@@ -58,4 +58,52 @@ class CopyArtifactSpec extends UnitSpec {
         return XmlUtil.serialize(writer.toString())
     }
 
+    def 'Full Copy Artifact DSL'() {
+
+        given:
+            def theDSL = '''\
+                copyArtifact {
+                        projectName 'BobJob-1330875179638'
+                        target 'blur'
+                        filter "/**/*"
+                }
+                '''
+
+        when:
+            def theXml = dslToXml(theDSL)
+            def xmlDiff = new Diff(theXml, XmlUtil.serialize(copyArtifactXml))
+
+        then:
+            xmlDiff.similar()
+    }
+
+    def dslToXml(String dslText) {
+        def delegate
+        Script dslScript = new GroovyShell().parse(dslText)
+        dslScript.metaClass = createEMC(dslScript.class, {
+            ExpandoMetaClass emc ->
+                emc.copyArtifact = { Closure cl ->
+                    cl.delegate = new CopyArtifactDelegate()
+                    cl.resolveStrategy = Closure.DELEGATE_FIRST
+                    cl()
+                    delegate = cl.delegate
+                }
+        })
+        dslScript.run()
+
+        def writer = new StringWriter()
+        def builder = new StreamingMarkupBuilder().bind {
+            mkp.xmlDeclaration()
+            out << delegate
+        }
+        writer << builder
+        return XmlUtil.serialize(writer.toString())
+    }
+
+    static ExpandoMetaClass createEMC(Class clazz, Closure cl) {
+        ExpandoMetaClass emc = new ExpandoMetaClass(clazz, false)
+        cl(emc)
+        emc.initialize()
+        return emc
+    }
 }
