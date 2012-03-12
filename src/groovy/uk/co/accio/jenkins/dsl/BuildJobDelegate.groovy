@@ -6,7 +6,7 @@ import uk.co.accio.jenkins.dsl.builders.BuilderDelegate
 import uk.co.accio.jenkins.dsl.wrappers.BuilderWrapperDelegate
 import uk.co.accio.jenkins.dsl.publishers.PublisherDelegate
 
-class JkBuildDelegate implements Buildable {
+class BuildJobDelegate implements Buildable {
 
     String description
     String props
@@ -26,9 +26,11 @@ class JkBuildDelegate implements Buildable {
     void name(String name) {
         println "Name: " + name
     }
+    void description(String desc) {
+        this.description = desc
+    }
     void desc(String desc) {
         this.description = desc
-        println "Desc: " + desc
     }
     void properties(props) {
         this.props = props
@@ -58,7 +60,6 @@ class JkBuildDelegate implements Buildable {
         cl()
 
         scmDelegate = cl.delegate
-        println "Scms: "
     }
 
     void triggers(Closure cl) {
@@ -67,7 +68,6 @@ class JkBuildDelegate implements Buildable {
         cl()
 
         triggerDelegate = cl.delegate
-        println "Triggers: "
     }
 
     void builders(Closure cl) {
@@ -76,7 +76,6 @@ class JkBuildDelegate implements Buildable {
         cl()
 
         builderDelegate = cl.delegate
-        println "Builders: "
     }
 
     void buildWrappers(Closure cl) {
@@ -85,7 +84,6 @@ class JkBuildDelegate implements Buildable {
         cl()
 
         buildWrapperDelegate = cl.delegate
-        println "BuildWrappers: "
     }
 
     void publishers(Closure cl) {
@@ -94,31 +92,47 @@ class JkBuildDelegate implements Buildable {
         cl()
 
         publisherDelegate = cl.delegate
-        println "Publishers: "
     }
 
     def void build(GroovyObject builder){
         def obj = {
             "project"() {
-                'actions'()
-                'keepDependencies'(keepDependencies)
-                'properties'(props)
-                'description'(description)
-                'canRoam'(canRoam)
-                'disabled'(disabled)
-                'blockBuildWhenDownstreamBuilding'(blockBuildWhenDownstreamBuilding)
-                'blockBuildWhenUpstreamBuilding'(blockBuildWhenUpstreamBuilding)
-                'concurrentBuild'(concurrentBuild)
-                'actions'()
-                'scm'(class: 'hudson.scm.NullSCM')
-                'triggers'(class: 'vector')
-                'dsl.builders'(){}
-                'publishers'(){}
-                out << scmDelegate
-                out << triggerDelegate
-                out << builderDelegate
-                out << buildWrapperDelegate
-                out << publisherDelegate
+                'actions'([:])
+                'keepDependencies'(keepDependencies, [:])
+                'properties'(props, [:])
+                if (scmDelegate) {
+                    out << scmDelegate
+                } else {
+                    'scm'(class: 'hudson.scm.NullSCM')
+                }
+                'canRoam'(canRoam, [:])
+                'disabled'(disabled, [:])
+                'blockBuildWhenDownstreamBuilding'(blockBuildWhenDownstreamBuilding, [:])
+                'blockBuildWhenUpstreamBuilding'(blockBuildWhenUpstreamBuilding, [:])
+                'concurrentBuild'(concurrentBuild, [:])
+                if (triggerDelegate) {
+                    out << triggerDelegate
+                } else {
+                    'triggers'([class: "vector"])
+                }
+                
+                if (builderDelegate) {
+                    out << builderDelegate
+                } else {
+                    'builders'([:])
+                }
+
+                if (publisherDelegate) {
+                    out << publisherDelegate
+                } else {
+                    'publishers'([:])
+                }
+                
+                if (buildWrapperDelegate) {
+                    out << buildWrapperDelegate
+                } else {
+                    'buildWrappers'([:])
+                }
             }
         }
         obj.delegate = builder

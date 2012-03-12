@@ -21,7 +21,7 @@ class BuildConfiguration {
         dslScript.metaClass = createEMC(dslScript.class, {
             ExpandoMetaClass emc ->
                 emc.build = { Closure cl ->
-                    cl.delegate = new JkBuildDelegate()
+                    cl.delegate = new BuildJobDelegate()
                     cl.resolveStrategy = Closure.DELEGATE_FIRST
                     cl()
                     jkBuild = cl.delegate

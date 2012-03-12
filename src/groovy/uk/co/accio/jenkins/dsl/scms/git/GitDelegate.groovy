@@ -34,32 +34,88 @@ class GitDelegate implements Buildable {
         this._scmName = scmName
     }
 
+    void disableSubmodules(disableSubmodules) {
+        this._disableSubmodules = disableSubmodules
+    }
+    void recursiveSubmodules(recursiveSubmodules) {
+        this._recursiveSubmodules = recursiveSubmodules
+    }
+    void doGenerateSubmoduleConfigurations(doGenerateSubmoduleConfigurations) {
+        this._doGenerateSubmoduleConfigurations = doGenerateSubmoduleConfigurations
+    }
+    void authorOrCommitter(authorOrCommitter) {
+        this._authorOrCommitter = authorOrCommitter
+    }
+    void clean(clean) {
+        this._clean = clean
+    }
+    void wipeOutWorkspace(wipeOutWorkspace) {
+        this._wipeOutWorkspace = wipeOutWorkspace
+    }
+    void pruneBranches(pruneBranches) {
+        this._pruneBranches = pruneBranches
+    }
+    void remotePoll(remotePoll) {
+        this._remotePoll = remotePoll
+    }
+
+    void gitTool(gitTool) {
+        this._gitTool = gitTool
+    }
+    void submoduleCfgClass(submoduleCfgClass) {
+        this._submoduleCfgClass = submoduleCfgClass
+    }
+    void relativeTargetDir(relativeTargetDir) {
+        this._relativeTargetDir = relativeTargetDir
+    }
+    void reference(reference) {
+        this._reference = reference
+    }
+    void excludedRegions(excludedRegions) {
+        this._excludedRegions = excludedRegions
+    }
+    void excludedUsers(excludedUsers) {
+        this._excludedUsers = excludedUsers
+    }
+    void gitConfigName(gitConfigName) {
+        this._gitConfigName = gitConfigName
+    }
+    void gitConfigEmail(gitConfigEmail) {
+        this._gitConfigEmail = gitConfigEmail
+    }
+    void skipTag(skipTag) {
+        this._skipTag = skipTag
+    }
+    void includedRegions(includedRegions) {
+        this._includedRegions = includedRegions
+    }
+
     def void build(GroovyObject builder) {
         def obj = {
             "scm"(class: topLevelElement) {
                 configVersion(_configVersion, [:])
                 scmName(_scmName, [:])
-                userRemoteConfigs(_userRemoteConfigs)
-                branches(_branches)
-                disableSubmodules(_disableSubmodules)
-                recursiveSubmodules(_recursiveSubmodules)
-                doGenerateSubmoduleConfigurations(_doGenerateSubmoduleConfigurations)
-                authorOrCommitter(_authorOrCommitter)
-                clean(_clean)
-                wipeOutWorkspace(_wipeOutWorkspace)
-                pruneBranches(_pruneBranches)
-                remotePoll(_remotePoll)
+                out << _userRemoteConfigs
+                out << _branches
+                disableSubmodules(_disableSubmodules, [:])
+                recursiveSubmodules(_recursiveSubmodules, [:])
+                doGenerateSubmoduleConfigurations(_doGenerateSubmoduleConfigurations, [:])
+                authorOrCommitter(_authorOrCommitter, [:])
+                clean(_clean, [:])
+                wipeOutWorkspace(_wipeOutWorkspace, [:])
+                pruneBranches(_pruneBranches, [:])
+                remotePoll(_remotePoll, [:])
                 buildChooser(class: _buildChooserClass)
-                gitTool(_gitTool)
+                gitTool(_gitTool, [:])
                 submoduleCfg(class: _submoduleCfgClass)
-                relativeTargetDir(_relativeTargetDir)
-                reference(_reference)
-                excludedRegions(_excludedRegions)
-                excludedUsers(_excludedUsers)
-                gitConfigName(_gitConfigName)
-                gitConfigEmail(_gitConfigEmail)
-                skipTag(_skipTag)
-                includedRegions(_includedRegions)
+                relativeTargetDir(_relativeTargetDir, [:])
+                reference(_reference, [:])
+                excludedRegions(_excludedRegions, [:])
+                excludedUsers(_excludedUsers, [:])
+                gitConfigName(_gitConfigName, [:])
+                gitConfigEmail(_gitConfigEmail, [:])
+                skipTag(_skipTag, [:])
+                includedRegions(_includedRegions, [:])
             }
         }
         obj.delegate = builder

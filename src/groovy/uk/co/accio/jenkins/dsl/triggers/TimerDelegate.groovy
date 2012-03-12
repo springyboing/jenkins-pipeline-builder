@@ -17,6 +17,10 @@ class TimerDelegate implements Buildable {
     String topLevelElement = 'hudson.triggers.TimerTrigger'
     String spec
 
+    void spec(spec) {
+        this.spec = spec
+    }
+
     def void build(GroovyObject builder) {
         def obj = {
             "${topLevelElement}"() {

@@ -22,4 +22,12 @@ class TriggerDelegate implements Buildable {
 
         triggers << cl.delegate
     }
+
+    void timer(Closure cl) {
+        cl.delegate = new TimerDelegate()
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        triggers << cl.delegate
+    }
 }
