@@ -199,7 +199,6 @@ class BuildJobSpec extends UnitSpec {
             def xmlDiff = new Diff(configAsXml, buildXml)
 
         then:
-//            buildXml == configAsXml
             xmlDiff.identical()
     }
 

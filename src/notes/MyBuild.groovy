@@ -4,9 +4,22 @@ build {
     buildJob("Albert") {
         desc "My First Desc"
 
-        scm {
+        scms {
+            git {
+                userRemoteConfig {
+                    name ''
+                    refspec ''
+                    url 'git://github.com/springyboing/jenkins-pipeline-builder.git'
+                }
+            }
         }
         triggers {
+            timer {
+                spec '5 * * * *'
+            }
+            scm {
+                spec '5 * * * *'
+            }
         }
         builders {
             grails {
@@ -20,8 +33,17 @@ build {
                 forceUpgrade false
                 nonInteractive true
             }
+            builders {
+                shell {
+                    command 'ls -lash'
+                }
+            }
         }
         publishers {
+            artifactArchiver {
+                artifacts '/target/**'
+            }
+            
         }
         buildWrappers {
             portAllocator {
@@ -35,11 +57,23 @@ build {
     buildJob("Bob") {
         desc "My First Desc"
 
-        scm {
+        scms {
+            git {
+                userRemoteConfig {
+                    name ''
+                    refspec ''
+                    url 'git://github.com/springyboing/jenkins-pipeline-builder.git'
+                }
+            }
         }
         triggers {
         }
         builders {
+            builders {
+                shell {
+                    command 'ls -lash'
+                }
+            }
             grails {
                 name "(Default)"
                 targets "test-app unit:"
@@ -66,7 +100,14 @@ build {
     buildJob("Charlie") {
         desc "My First Desc"
 
-        scm {
+        scms {
+            git {
+                userRemoteConfig {
+                    name ''
+                    refspec ''
+                    url 'git://github.com/springyboing/jenkins-pipeline-builder.git'
+                }
+            }
         }
         triggers {
         }
