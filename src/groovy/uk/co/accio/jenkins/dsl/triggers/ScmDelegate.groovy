@@ -17,6 +17,10 @@ class ScmDelegate implements Buildable {
     String topLevelElement = 'hudson.triggers.SCMTrigger'
     String spec
 
+    void spec(spec) {
+        this.spec = spec
+    }
+
     def void build(GroovyObject builder) {
         def obj = {
             "${topLevelElement}"() {

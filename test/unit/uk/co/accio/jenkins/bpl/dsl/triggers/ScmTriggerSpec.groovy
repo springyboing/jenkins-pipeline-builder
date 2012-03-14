@@ -33,7 +33,6 @@ class ScmTriggerSpec extends UnitSpec {
             def xmlDiff = new Diff(theXml, XmlUtil.serialize(scmTriggerXml))
 
         then:
-            //theXml == scmTriggerXml
             xmlDiff.identical()
     }
 
