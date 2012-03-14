@@ -16,15 +16,15 @@ class BuildConfiguration {
     static void runJenkinsBuilder(String text) {
         Script dslScript = new GroovyShell().parse(text)
 
-        def jkBuild
+        def jkBuilds
 
         dslScript.metaClass = createEMC(dslScript.class, {
             ExpandoMetaClass emc ->
                 emc.build = { Closure cl ->
-                    cl.delegate = new BuildJobDelegate()
+                    cl.delegate = new JenkinsBuildsDelegate()
                     cl.resolveStrategy = Closure.DELEGATE_FIRST
                     cl()
-                    jkBuild = cl.delegate
+                    jkBuilds = cl.delegate
                 }
         })
         dslScript.run()
@@ -32,7 +32,13 @@ class BuildConfiguration {
         def writer = new StringWriter()
         def builder = new StreamingMarkupBuilder().bind {
             mkp.xmlDeclaration()
-            out << jkBuild
+            'builds'([:]) {
+                for (buildJob in jkBuilds.buildJobs) {
+                    'build'([class: 'poo']) {
+                        out << buildJob
+                    }
+                }
+            }
         }
         writer << builder
         println  XmlUtil.serialize(writer.toString())

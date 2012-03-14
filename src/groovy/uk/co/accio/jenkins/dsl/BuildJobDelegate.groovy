@@ -8,6 +8,7 @@ import uk.co.accio.jenkins.dsl.publishers.PublisherDelegate
 
 class BuildJobDelegate implements Buildable {
 
+    String name
     String description
     String props
     Boolean keepDependencies = false

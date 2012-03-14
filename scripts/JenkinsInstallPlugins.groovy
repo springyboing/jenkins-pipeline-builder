@@ -6,20 +6,24 @@ includeTargets << new File ( "${grailsHome}/scripts/Init.groovy" )
 target(main: "Installs all the required plugins on the Jenkins server") {
 	depends(configureProxy, classpath)
 
-	runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'grails']) // Grails Plugin
-    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'subversion'])
-    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'git'])
-    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'setenv'])
-    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'copyartifact'])
-    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'port-allocator'])
-    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'build-pipeline-plugin'])
-//    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'violations'])
-    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'jobConfigHistory'])
-//    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'batch-task'])
-//    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'gradle'])
-//    runCliCommand('http://33.33.33.10:8080', ['install-plugin', 'groovy'])
+    def host = '192.168.1.68'
+    def port = '8080'
+    def jenkinsUrl = "http://${host}:${port}"
+
+	runCliCommand(jenkinsUrl, ['install-plugin', 'grails']) // Grails Plugin
+    runCliCommand(jenkinsUrl, ['install-plugin', 'subversion'])
+    runCliCommand(jenkinsUrl, ['install-plugin', 'git'])
+    runCliCommand(jenkinsUrl, ['install-plugin', 'setenv'])
+    runCliCommand(jenkinsUrl, ['install-plugin', 'copyartifact'])
+    runCliCommand(jenkinsUrl, ['install-plugin', 'port-allocator'])
+    runCliCommand(jenkinsUrl, ['install-plugin', 'build-pipeline-plugin'])
+//    runCliCommand(jenkinsUrl, ['install-plugin', 'violations'])
+    runCliCommand(jenkinsUrl, ['install-plugin', 'jobConfigHistory'])
+//    runCliCommand(jenkinsUrl, ['install-plugin', 'batch-task'])
+//    runCliCommand(jenkinsUrl, ['install-plugin', 'gradle'])
+//    runCliCommand(jenkinsUrl, ['install-plugin', 'groovy'])
     //extended-choice-parameter 
-    runCliCommand('http://33.33.33.10:8080', ['safe-restart'])
+    runCliCommand(jenkinsUrl, ['safe-restart'])
 }
 
 setDefaultTarget(main)

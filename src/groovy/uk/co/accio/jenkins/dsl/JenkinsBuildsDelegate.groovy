@@ -18,7 +18,9 @@ class JenkinsBuildsDelegate {
     }
 
     void buildJob(String name, Closure cl) {
-        cl.delegate = new BuildJobDelegate()
+        def delegate = new BuildJobDelegate()
+        delegate.name = name
+        cl.delegate = delegate
         cl.resolveStrategy = Closure.DELEGATE_FIRST
         cl()
 

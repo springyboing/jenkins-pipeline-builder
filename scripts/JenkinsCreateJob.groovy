@@ -6,7 +6,26 @@ includeTargets << new File ( "${grailsHome}/scripts/Init.groovy" )
 target(main: "Installs all the required plugins on the Jenkins server") {
 	depends(configureProxy, classpath)
 
-    def configXml = """<?xml version='1.0' encoding='UTF-8'?>
+//    def configXml = """\
+//<?xml version='1.0' encoding='UTF-8'?>
+//<project>
+//  <actions/>
+//  <keepDependencies>false</keepDependencies>
+//  <properties/>
+//  <scm class="hudson.scm.NullSCM"/>
+//  <canRoam>false</canRoam>
+//  <disabled>false</disabled>
+//  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+//  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+//  <triggers class="vector"/>
+//  <concurrentBuild>false</concurrentBuild>
+//  <builders/>
+//  <publishers/>
+//  <buildWrappers/>
+//</project>"""
+
+def configXml = """\
+<?xml version='1.0' encoding='UTF-8'?>
 <project>
   <actions/>
   <keepDependencies>false</keepDependencies>
@@ -16,14 +35,49 @@ target(main: "Installs all the required plugins on the Jenkins server") {
   <disabled>false</disabled>
   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <triggers class="vector"/>
   <concurrentBuild>false</concurrentBuild>
-  <builders/>
-  <publishers/>
-  <buildWrappers/>
+  <triggers class="vector"/>
+  <builder>
+    <com.g2one.hudson.grails.GrailsBuilder>
+      <targets>test-app unit:</targets>
+      <name>(Default)</name>
+      <grailsWorkDir/>
+      <projectWorkDir/>
+      <projectBaseDir/>
+      <serverPort/>
+      <properties/>
+      <forceUpgrade>false</forceUpgrade>
+      <nonInteractive>true</nonInteractive>
+    </com.g2one.hudson.grails.GrailsBuilder>
+    <hudson.plugins.copyartifact.CopyArtifact>
+      <projectName/>
+      <filter/>
+      <target/>
+      <selector class="hudson.plugins.copyartifact.TriggeredBuildSelector"/>
+    </hudson.plugins.copyartifact.CopyArtifact>
+  </builder>
+  <publisher>
+    <hudson.tasks.ArtifactArchiver>
+      <artifacts>/target</artifacts>
+      <latestOnly>false</latestOnly>
+    </hudson.tasks.ArtifactArchiver>
+  </publisher>
+  <buildWrappers>
+    <org.jvnet.hudson.plugins.port__allocator.PortAllocator>
+      <ports>
+        <org.jvnet.hudson.plugins.port__allocator.DefaultPortType>
+          <name>GRAILS_HTTP_PORT</name>
+        </org.jvnet.hudson.plugins.port__allocator.DefaultPortType>
+      </ports>
+    </org.jvnet.hudson.plugins.port__allocator.PortAllocator>
+  </buildWrappers>
 </project>"""
 
-    runCliCommand('http://33.33.33.10:8080', ['create-job', 'BobJob-' + new Date().time], new ByteArrayInputStream(configXml.getBytes()))
+    def host = '192.168.1.68'
+    def port = '8080'
+    def jenkinsUrl = "http://${host}:${port}"
+
+    runCliCommand(jenkinsUrl, ['create-job', 'BobJob-' + new Date().time], new ByteArrayInputStream(configXml.getBytes()))
 }
 
 setDefaultTarget(main)

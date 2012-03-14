@@ -8,7 +8,11 @@ target(main: "The description of the script goes here!") {
 
     println "argsMap: " + argsMap
 
-    runCliCommand('http://33.33.33.10:8080', ['help'])
+    def host = '192.168.1.68'
+    def port = '8080'
+    def jenkinsUrl = "http://${host}:${port}"
+
+    runCliCommand(jenkinsUrl, ['help'])
 }
 
 setDefaultTarget(main)
