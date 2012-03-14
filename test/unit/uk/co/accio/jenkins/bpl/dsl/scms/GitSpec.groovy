@@ -10,6 +10,7 @@ import org.custommonkey.xmlunit.XMLUnit
 import uk.co.accio.jenkins.dsl.scms.git.GitBranchDelegate
 import uk.co.accio.jenkins.dsl.scms.git.GitDelegate
 import uk.co.accio.jenkins.dsl.scms.git.GitUserRemoteConfigDelegate
+import spock.lang.Ignore
 
 class GitSpec extends UnitSpec {
 
@@ -23,7 +24,6 @@ class GitSpec extends UnitSpec {
 <?xml version="1.0" encoding="UTF-8"?>
 <scm class="hudson.plugins.git.GitSCM">
 <configVersion>36</configVersion>
-<scmName>HelloWorld</scmName>
 <userRemoteConfigs>
 <hudson.plugins.git.UserRemoteConfig>
 <name>MyGitRemote</name>
@@ -55,6 +55,7 @@ class GitSpec extends UnitSpec {
 <gitConfigEmail>joe@blogs.com</gitConfigEmail>
 <skipTag>false</skipTag>
 <includedRegions>E</includedRegions>
+<scmName>HelloWorld</scmName>
 </scm>
 '''
 
@@ -96,5 +97,153 @@ class GitSpec extends UnitSpec {
         writer << builder
         return XmlUtil.serialize(writer.toString())
     }
+
+    @Ignore
+    def 'Full Git SCM DSL'() {
+
+        given:
+            def theDSL = '''\
+                git {
+                    userRemoteConfig {
+                        name ''
+                        refspec ''
+                        url 'ssh://qwerty.com'
+                    }
+                }
+                '''
+            def fullGitScmXml = '''\
+                <?xml version="1.0" encoding="UTF-8"?>
+                <scm class="hudson.plugins.git.GitSCM">
+                    <configVersion>2</configVersion>
+                    <userRemoteConfigs>
+                      <hudson.plugins.git.UserRemoteConfig>
+                        <name></name>
+                        <refspec></refspec>
+                        <url>ssh://qwerty.com</url>
+                      </hudson.plugins.git.UserRemoteConfig>
+                    </userRemoteConfigs>
+                    <branches>
+                      <hudson.plugins.git.BranchSpec>
+                        <name>**</name>
+                      </hudson.plugins.git.BranchSpec>
+                    </branches>
+                    <disableSubmodules>false</disableSubmodules>
+                    <recursiveSubmodules>false</recursiveSubmodules>
+                    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+                    <authorOrCommitter>false</authorOrCommitter>
+                    <clean>false</clean>
+                    <wipeOutWorkspace>false</wipeOutWorkspace>
+                    <pruneBranches>false</pruneBranches>
+                    <remotePoll>false</remotePoll>
+                    <buildChooser class="hudson.plugins.git.util.DefaultBuildChooser"/>
+                    <gitTool>Default</gitTool>
+                    <submoduleCfg class="list"/>
+                    <relativeTargetDir></relativeTargetDir>
+                    <reference></reference>
+                    <excludedRegions></excludedRegions>
+                    <excludedUsers></excludedUsers>
+                    <gitConfigName></gitConfigName>
+                    <gitConfigEmail></gitConfigEmail>
+                    <skipTag>false</skipTag>
+                    <includedRegions></includedRegions>
+                    <scmName></scmName>
+                </scm>'''.stripIndent()
+
+        when:
+            def theXml = dslToXml(theDSL)
+            def xmlDiff = new Diff(theXml, XmlUtil.serialize(fullGitScmXml))
+
+        then:
+            xmlDiff.similar()
+    }
+
+    def 'Minimal Git SCM DSL'() {
+
+        given:
+            def theDSL = '''\
+                git {
+                    userRemoteConfig {
+                        name ''
+                        refspec ''
+                        url 'ssh://qwerty.com'
+                    }
+                }
+                '''
+            def minimalGitScmXml = '''\
+                <?xml version="1.0" encoding="UTF-8"?>
+                <scm class="hudson.plugins.git.GitSCM">
+                    <configVersion>2</configVersion>
+                    <userRemoteConfigs>
+                      <hudson.plugins.git.UserRemoteConfig>
+                        <name></name>
+                        <refspec></refspec>
+                        <url>ssh://qwerty.com</url>
+                      </hudson.plugins.git.UserRemoteConfig>
+                    </userRemoteConfigs>
+                    <branches>
+                      <hudson.plugins.git.BranchSpec>
+                        <name>**</name>
+                      </hudson.plugins.git.BranchSpec>
+                    </branches>
+                    <disableSubmodules>false</disableSubmodules>
+                    <recursiveSubmodules>false</recursiveSubmodules>
+                    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+                    <authorOrCommitter>false</authorOrCommitter>
+                    <clean>false</clean>
+                    <wipeOutWorkspace>false</wipeOutWorkspace>
+                    <pruneBranches>false</pruneBranches>
+                    <remotePoll>false</remotePoll>
+                    <buildChooser class="hudson.plugins.git.util.DefaultBuildChooser"/>
+                    <gitTool>Default</gitTool>
+                    <submoduleCfg class="list"/>
+                    <relativeTargetDir></relativeTargetDir>
+                    <reference></reference>
+                    <excludedRegions></excludedRegions>
+                    <excludedUsers></excludedUsers>
+                    <gitConfigName></gitConfigName>
+                    <gitConfigEmail></gitConfigEmail>
+                    <skipTag>false</skipTag>
+                    <includedRegions></includedRegions>
+                    <scmName></scmName>
+                </scm>'''.stripIndent()
+
+        when:
+            def theXml = dslToXml(theDSL)
+            def xmlDiff = new Diff(theXml, XmlUtil.serialize(minimalGitScmXml))
+
+        then:
+            xmlDiff.similar()
+    }
+
+    def dslToXml(String dslText) {
+        def delegate
+        Script dslScript = new GroovyShell().parse(dslText)
+        dslScript.metaClass = createEMC(dslScript.class, {
+            ExpandoMetaClass emc ->
+                emc.git = { Closure cl ->
+                    cl.delegate = new GitDelegate()
+                    cl.resolveStrategy = Closure.DELEGATE_FIRST
+                    cl()
+                    delegate = cl.delegate
+                }
+        })
+        dslScript.run()
+
+        def writer = new StringWriter()
+        def builder = new StreamingMarkupBuilder().bind {
+            mkp.xmlDeclaration()
+            out << delegate
+        }
+        writer << builder
+        return XmlUtil.serialize(writer.toString())
+    }
+
+    static ExpandoMetaClass createEMC(Class clazz, Closure cl) {
+        ExpandoMetaClass emc = new ExpandoMetaClass(clazz, false)
+        cl(emc)
+        emc.initialize()
+        return emc
+    }
+
 
 }

@@ -2,23 +2,72 @@ package uk.co.accio.jenkins.dsl.publishers
 
 class PublisherDelegate implements Buildable {
 
-    String topLevelElement = "publisher"
+    String topLevelElement = "publishers"
 
-    def artifactArchiver
+    def publishers = []
 
     void artifactArchiver(Closure cl) {
         cl.delegate = new ArtifactArchiverDelegate()
         cl.resolveStrategy = Closure.DELEGATE_FIRST
         cl()
 
-        artifactArchiver = cl.delegate
-        println "ArtifactArchiver: "
+        publishers << cl.delegate
+    }
+
+     void buildPipelineTrigger(Closure cl) {
+        cl.delegate = new BuildPipelineTriggerDelegate()
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        publishers << cl.delegate
+    }
+
+    void buildTrigger(Closure cl) {
+        cl.delegate = new BuildTriggerDelegate()
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        publishers << cl.delegate
+    }
+
+    void fingerprinter(Closure cl) {
+        cl.delegate = new FingerprinterDelegate()
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        publishers << cl.delegate
+    }
+
+    void javadocArchiver(Closure cl) {
+        cl.delegate = new JavadocArchiverDelegate()
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        publishers << cl.delegate
+    }
+
+    void junitResultArchiver(Closure cl) {
+        cl.delegate = new JUnitResultArchiverDelegate()
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        publishers << cl.delegate
+    }
+
+    void mailer(Closure cl) {
+        cl.delegate = new MailerDelegate()
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        publishers << cl.delegate
     }
 
     def void build(GroovyObject builder){
         def obj = {
             "${topLevelElement}"() {
-                out << artifactArchiver
+                for (publish in publishers) {
+                    out << publish
+                }
             }
         }
         obj.delegate = builder

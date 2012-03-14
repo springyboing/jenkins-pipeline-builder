@@ -110,13 +110,15 @@ class BuildJobDelegate implements Buildable {
                 'disabled'(disabled, [:])
                 'blockBuildWhenDownstreamBuilding'(blockBuildWhenDownstreamBuilding, [:])
                 'blockBuildWhenUpstreamBuilding'(blockBuildWhenUpstreamBuilding, [:])
-                'concurrentBuild'(concurrentBuild, [:])
+
                 if (triggerDelegate) {
                     out << triggerDelegate
                 } else {
                     'triggers'([class: "vector"])
                 }
-                
+
+                'concurrentBuild'(concurrentBuild, [:])
+
                 if (builderDelegate) {
                     out << builderDelegate
                 } else {

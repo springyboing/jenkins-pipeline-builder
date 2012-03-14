@@ -5,11 +5,8 @@ import uk.co.accio.jenkins.dsl.builders.CopyArtifactDelegate
 
 class BuilderDelegate  implements Buildable {
 
-    String topLevelElement = 'builder'
+    String topLevelElement = 'builders'
     def builders = []
-
-    BuilderDelegate() {
-    }
 
     void grails(Closure cl) {
         cl.delegate = new GrailsDelegate()
@@ -17,15 +14,22 @@ class BuilderDelegate  implements Buildable {
         cl()
 
         builders << cl.delegate
-        println "Grails: "
     }
+
     void copyArtifact(Closure cl) {
         cl.delegate = new CopyArtifactDelegate()
         cl.resolveStrategy = Closure.DELEGATE_FIRST
         cl()
 
         builders << cl.delegate
-        println "copyArtifact: "
+    }
+
+    void shell(Closure cl) {
+        cl.delegate = new ShellDelegate()
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        builders << cl.delegate
     }
 
     def void build(GroovyObject builder) {

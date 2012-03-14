@@ -7,7 +7,6 @@ class ScmDelegate implements Buildable {
 
     String topLevelElementClassIfEmpty = "hudson.scm.NullSCM"
     def scmList = []
-    def gitDelegate
 
     void svn(Closure cl) {
         cl.delegate = new SvnDelegate()
@@ -15,7 +14,6 @@ class ScmDelegate implements Buildable {
         cl()
 
         scmList << cl.delegate
-        println "SVN: "
     }
 
     void git(Closure cl) {
@@ -23,15 +21,14 @@ class ScmDelegate implements Buildable {
         cl.resolveStrategy = Closure.DELEGATE_FIRST
         cl()
 
-        gitDelegate = cl.delegate
         scmList << cl.delegate
-        println "Git: "
     }
 
     def void build(GroovyObject builder) {
         def obj = {
-            out << gitDelegate
-            //out << scmList
+            for (scm in scmList) {
+                out << scm
+            }
         }
         obj.delegate = builder
         obj()

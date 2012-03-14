@@ -133,12 +133,10 @@ class BuildJobSpec extends UnitSpec {
                 buildJob {
                     scms {
                         git {
-                            userRemoteConfigs {
-                                userRemoteConfig {
-                                    name ''
-                                    refspec ''
-                                    url 'ssh://qwerty.com'
-                                }
+                            userRemoteConfig {
+                                name ''
+                                refspec ''
+                                url 'ssh://qwerty.com'
                             }
                         }
                     }
@@ -201,8 +199,8 @@ class BuildJobSpec extends UnitSpec {
             def xmlDiff = new Diff(configAsXml, buildXml)
 
         then:
-            buildXml == configAsXml
-            xmlDiff.similar()
+//            buildXml == configAsXml
+            xmlDiff.identical()
     }
 
     def 'Simplest BuildJob DSL with builder'() {
@@ -247,14 +245,15 @@ class BuildJobSpec extends UnitSpec {
             xmlDiff.identical()
     }
 
-    @Ignore
     def 'Simplest BuildJob DSL with publisher'() {
 
         setup:
             String theDsl = """\
                 buildJob {
                     publishers {
-                        archiveArtifacts {}
+                        artifactArchiver {
+                            artifacts '/target/**'
+                        }
                     }
                 }"""
             String configAsXml = '''\
@@ -289,14 +288,17 @@ class BuildJobSpec extends UnitSpec {
             xmlDiff.identical()
     }
 
-    @Ignore
     def 'Simplest BuildJob DSL with buildWrapper'() {
 
         setup:
             String theDsl = """\
                 buildJob {
-                    buildWarppers {
-                        port 'GRAILS_HTTP_PORT'
+                    buildWrappers {
+                        portAllocator {
+                            ports {
+                                name 'GRAILS_HTTP_PORT'
+                            }
+                        }
                     }
                 }"""
             String configAsXml = '''\

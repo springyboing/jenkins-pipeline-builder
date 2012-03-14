@@ -3,8 +3,8 @@ package uk.co.accio.jenkins.dsl.scms.git
 class GitDelegate implements Buildable {
 
     String topLevelElement = 'hudson.plugins.git.GitSCM'
-    Integer _configVersion
-    String _scmName
+    Integer _configVersion = 2
+    String _scmName = ''
     Boolean _disableSubmodules = false
     Boolean _recursiveSubmodules = false
     Boolean _doGenerateSubmoduleConfigurations = false
@@ -16,14 +16,14 @@ class GitDelegate implements Buildable {
     String _buildChooserClass = 'hudson.plugins.git.util.DefaultBuildChooser'
     String _gitTool = 'Default'
     String _submoduleCfgClass = "list"
-    String _relativeTargetDir
-    String _reference
-    String _excludedRegions
-    String _excludedUsers
-    String _gitConfigName
-    String _gitConfigEmail
+    String _relativeTargetDir = ''
+    String _reference = ''
+    String _excludedRegions = ''
+    String _excludedUsers = ''
+    String _gitConfigName = ''
+    String _gitConfigEmail = ''
     Boolean _skipTag = false
-    String _includedRegions
+    String _includedRegions = ''
     def _branches = []
     def _userRemoteConfigs = []
 
@@ -94,9 +94,22 @@ class GitDelegate implements Buildable {
         def obj = {
             "scm"(class: topLevelElement) {
                 configVersion(_configVersion, [:])
-                scmName(_scmName, [:])
-                out << _userRemoteConfigs
-                out << _branches
+
+                userRemoteConfigs([:]) {
+                    if (_userRemoteConfigs) {
+                        out << _userRemoteConfigs
+                    }
+                }
+                branches([:]) {
+                    if (_branches) {
+                        for (branch in _branches) {
+                            out << branch
+                        }
+                    } else {
+                        out << new GitBranchDelegate(_name: '**')
+                    }
+                }
+                
                 disableSubmodules(_disableSubmodules, [:])
                 recursiveSubmodules(_recursiveSubmodules, [:])
                 doGenerateSubmoduleConfigurations(_doGenerateSubmoduleConfigurations, [:])
@@ -116,6 +129,7 @@ class GitDelegate implements Buildable {
                 gitConfigEmail(_gitConfigEmail, [:])
                 skipTag(_skipTag, [:])
                 includedRegions(_includedRegions, [:])
+                scmName(_scmName, [:])
             }
         }
         obj.delegate = builder
@@ -130,7 +144,7 @@ class GitDelegate implements Buildable {
         _branches << cl.delegate
     }
 
-    void userRemoteConfigs(Closure cl) {
+    void userRemoteConfig(Closure cl) {
         cl.delegate = new GitUserRemoteConfigDelegate()
         cl.resolveStrategy = Closure.DELEGATE_FIRST
         cl()
