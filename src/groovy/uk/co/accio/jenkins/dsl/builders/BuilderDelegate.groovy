@@ -3,7 +3,7 @@ package uk.co.accio.jenkins.dsl.builders
 import uk.co.accio.jenkins.dsl.builders.GrailsDelegate
 import uk.co.accio.jenkins.dsl.builders.CopyArtifactDelegate
 
-class BuilderDelegate  implements Buildable {
+class BuilderDelegate implements Buildable {
 
     String topLevelElement = 'builders'
     def builders = []

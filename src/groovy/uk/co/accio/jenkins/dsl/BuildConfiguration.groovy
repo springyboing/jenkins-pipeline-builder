@@ -14,7 +14,9 @@ class BuildConfiguration {
     }
 
     static void runJenkinsBuilder(String text) {
-        Script dslScript = new GroovyShell().parse(text)
+        Binding binding = new Binding()
+        binding.setVariable("appName", 'BottomBurp')
+        Script dslScript = new GroovyShell(binding).parse(text)
 
         def jkBuilds
 

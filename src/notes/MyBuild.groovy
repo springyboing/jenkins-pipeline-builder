@@ -1,8 +1,9 @@
 
-build {
+builds {
 
-    buildJob("Albert") {
+    buildJob("${appName}-Albert") {
         desc "My First Desc"
+        disabled true
 
         scms {
             git {
@@ -54,8 +55,9 @@ build {
         }
     }
 
-    buildJob("Bob") {
+    buildJob("${appName}-Bob") {
         desc "My First Desc"
+        disabled true
 
         scms {
             git {
@@ -97,8 +99,9 @@ build {
         }
     }
 
-    buildJob("Charlie") {
+    buildJob("${appName}-Charlie") {
         desc "My First Desc"
+        disabled true
 
         scms {
             git {

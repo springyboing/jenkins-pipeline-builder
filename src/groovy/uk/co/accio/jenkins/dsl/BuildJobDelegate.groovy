@@ -6,26 +6,10 @@ import uk.co.accio.jenkins.dsl.builders.BuilderDelegate
 import uk.co.accio.jenkins.dsl.wrappers.BuilderWrapperDelegate
 import uk.co.accio.jenkins.dsl.publishers.PublisherDelegate
 
-class BuildJobDelegate implements Buildable {
-
-    String name
-    String description
-    String props
-    Boolean keepDependencies = false
-    Boolean canRoam = false
-    Boolean disabled = false
-    Boolean blockBuildWhenDownstreamBuilding = false
-    Boolean blockBuildWhenUpstreamBuilding = false
-    Boolean concurrentBuild = false
-
-    def scmDelegate
-    def triggerDelegate
-    def builderDelegate
-    def buildWrapperDelegate
-    def publisherDelegate
+class BuildJobDelegate extends BuildJob {
 
     void name(String name) {
-        println "Name: " + name
+        this.name = name
     }
     void description(String desc) {
         this.description = desc
@@ -93,52 +77,5 @@ class BuildJobDelegate implements Buildable {
         cl()
 
         publisherDelegate = cl.delegate
-    }
-
-    def void build(GroovyObject builder){
-        def obj = {
-            "project"() {
-                'actions'([:])
-                'keepDependencies'(keepDependencies, [:])
-                'properties'(props, [:])
-                if (scmDelegate) {
-                    out << scmDelegate
-                } else {
-                    'scm'(class: 'hudson.scm.NullSCM')
-                }
-                'canRoam'(canRoam, [:])
-                'disabled'(disabled, [:])
-                'blockBuildWhenDownstreamBuilding'(blockBuildWhenDownstreamBuilding, [:])
-                'blockBuildWhenUpstreamBuilding'(blockBuildWhenUpstreamBuilding, [:])
-
-                if (triggerDelegate) {
-                    out << triggerDelegate
-                } else {
-                    'triggers'([class: "vector"])
-                }
-
-                'concurrentBuild'(concurrentBuild, [:])
-
-                if (builderDelegate) {
-                    out << builderDelegate
-                } else {
-                    'builders'([:])
-                }
-
-                if (publisherDelegate) {
-                    out << publisherDelegate
-                } else {
-                    'publishers'([:])
-                }
-                
-                if (buildWrapperDelegate) {
-                    out << buildWrapperDelegate
-                } else {
-                    'buildWrappers'([:])
-                }
-            }
-        }
-        obj.delegate = builder
-        obj()
     }
 }

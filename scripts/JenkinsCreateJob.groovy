@@ -1,10 +1,12 @@
 import hudson.cli.CLI
+import uk.co.accio.jenkins.dsl.BuildConfigurator
 
-grailsHome = ant.project.properties."environment.GRAILS_HOME"
-includeTargets << new File ( "${grailsHome}/scripts/Init.groovy" )
+includeTargets << grailsScript("_GrailsClasspath")
+includeTargets << grailsScript('_GrailsPackage')
+includeTargets << new File("${basedir}/scripts/_Jenkins.groovy")
 
-target(main: "Installs all the required plugins on the Jenkins server") {
-	depends(configureProxy, classpath)
+target(default: "Creates new Job on your Jenkins server") {
+    depends(classpath, compile)
 
 //    def configXml = """\
 //<?xml version='1.0' encoding='UTF-8'?>
@@ -108,20 +110,68 @@ def configXml = """\
       </buildWrappers>
     </project>""".stripIndent()
 
-    def host = '192.168.1.68'
-    def port = '8080'
-    def jenkinsUrl = "http://${host}:${port}"
 
-    runCliCommand(jenkinsUrl, ['create-job', 'BobJob-' + new Date().time], new ByteArrayInputStream(configXml.getBytes()))
+    // These should be got form the BuildConf.groovy file or your Settings.groovy file
+    def jobName = "${grailsAppName}-"
+    jobName += new Date().time
+
+    println "ArgsMap: " + argsMap
+    println "ArgsMap.params: " + argsMap.params
+
+    // When loaded from DSL I can have multiple jobs, each with there own name
+    def jobs = [:]
+
+    if (argsMap.file && new File(argsMap.file).exists()) {
+
+        if (argsMap.file.endsWith('.groovy')) {
+
+            jobs = loadJobsFromGroovyDslFile(argsMap.file)
+            //jobs = ['OneA': new ByteArrayInputStream(configXml.getBytes()), 'OneB': new ByteArrayInputStream(configXml.getBytes()), 'OneC': new ByteArrayInputStream(configXml.getBytes())]
+        } else {
+
+            if (argsMap.name) {
+                jobName = argsMap.name + '-' + new Date().time
+            }
+
+            jobs.put(jobName, new FileInputStream(argsMap.file))
+        }
+
+    } else if (argsMap.file && !new File(argsMap.file).exists()) {
+
+            grailsConsole.error 'File Not Found: ' + argsMap.file
+            exit 1
+    } else {
+        
+        jonName = 'TestJob-' + new Date().time
+        jobs.put(jobName, new ByteArrayInputStream(configXml.getBytes()))
+    }
+    
+    jobs.each { name, config ->
+        jenkinsArgs = ['create-job', name]
+        jenkinsInputStream = config
+
+        executeJenkinsCommand()
+    }
 }
 
-setDefaultTarget(main)
+Map loadJobsFromGroovyDslFile (String dslFile ) {
 
-def runCliCommand(String rootUrl, List<String> args, InputStream input = System.in, OutputStream output = System.out, OutputStream err = System.err) {
-    def CLI cli = new CLI(rootUrl.toURI().toURL())
-    cli.execute(args, input, output, err)
-    cli.close()
+    Class bcClass = classLoader.loadClass('uk.co.accio.jenkins.dsl.BuildConfigurator')
+    def buildConfigurator = bcClass.newInstance()
+    buildConfigurator.bindVariable("appName", grailsAppName)
+    buildConfigurator.runJenkinsBuilder(new File(dslFile))
+
+    List buildJobs = buildConfigurator.buildConfig.buildJobs
+    if (buildJobs && !buildJobs.isEmpty()) {
+        return buildJobs.collectEntries {
+            // TODO - Don't like the ByteArrayInputStream...  Why not leave as string until passed to jenkins?
+            [it.name, new ByteArrayInputStream(it.toBuildConfigXml().getBytes())]
+        }
+    } else {
+        return [:]
+    }
 }
+
 
 /*
 

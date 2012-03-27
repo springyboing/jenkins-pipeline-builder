@@ -39,3 +39,9 @@ grails.project.dependency.resolution = {
         compile ":spock:0.6"
     }
 }
+
+jenkins.host = '192.168.1.64'
+//jenkins.port = '8888'
+//jenkins.protocol = 'http'
+//jenkins.path = ''
+

@@ -17,22 +17,23 @@ class ConfigFileSpec extends UnitSpec {
     def "compair simplest config file possible"() {
         setup:
             String expectedXml = loadFile('config-minimal.xml')
-            String personAsXml = """<?xml version='1.0' encoding='UTF-8'?>
-<project>
-  <actions/>
-  <keepDependencies>false</keepDependencies>
-  <properties/>
-  <scm class="hudson.scm.NullSCM"/>
-  <canRoam>false</canRoam>
-  <disabled>false</disabled>
-  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
-  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <triggers class="vector"/>
-  <concurrentBuild>false</concurrentBuild>
-  <builders/>
-  <publishers/>
-  <buildWrappers/>
-</project>"""
+            String personAsXml = """\
+                <?xml version='1.0' encoding='UTF-8'?>
+                <project>
+                  <actions/>
+                  <keepDependencies>false</keepDependencies>
+                  <properties/>
+                  <scm class="hudson.scm.NullSCM"/>
+                  <canRoam>false</canRoam>
+                  <disabled>false</disabled>
+                  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+                  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+                  <triggers class="vector"/>
+                  <concurrentBuild>false</concurrentBuild>
+                  <builders/>
+                  <publishers/>
+                  <buildWrappers/>
+                </project>""".stripIndent()
 
         when:
             def xmlDiff = new Diff(personAsXml, expectedXml)
@@ -46,28 +47,29 @@ class ConfigFileSpec extends UnitSpec {
 
         setup:
             String theDsl = '''\
-                    builds {
-                        defaults {
-                            
-                        }
-                    }'''
-              String configAsXml = '''\
-                    <?xml version='1.0' encoding='UTF-8'?>
-                    <project>
-                      <actions/>
-                      <keepDependencies>false</keepDependencies>
-                      <properties/>
-                      <scm class="hudson.scm.NullSCM"/>
-                      <canRoam>false</canRoam>
-                      <disabled>false</disabled>
-                      <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
-                      <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-                      <triggers class="vector"/>
-                      <concurrentBuild>false</concurrentBuild>
-                      <builders/>
-                      <publishers/>
-                      <buildWrappers/>
-                    </project>'''
+                builds {
+                    defaults {
+
+                    }
+                }'''.stripIndent()
+        
+            String configAsXml = '''\
+                <?xml version='1.0' encoding='UTF-8'?>
+                <project>
+                  <actions/>
+                  <keepDependencies>false</keepDependencies>
+                  <properties/>
+                  <scm class="hudson.scm.NullSCM"/>
+                  <canRoam>false</canRoam>
+                  <disabled>false</disabled>
+                  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+                  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+                  <triggers class="vector"/>
+                  <concurrentBuild>false</concurrentBuild>
+                  <builders/>
+                  <publishers/>
+                  <buildWrappers/>
+                </project>'''.stripIndent()
 
         when:
             def expectedXml = dslToXml(theDsl)
@@ -77,33 +79,32 @@ class ConfigFileSpec extends UnitSpec {
             xmlDiff.identical()
     }
 
-    @Ignore
     def 'Simplest DSL possible'() {
 
         setup:
             String theDsl = '''\
-                    builds {
-                        buildJob('Checkout') {
-                        }
-                    }'''
+                builds {
+                    buildJob("${appName}-Checkout") {
+                    }
+                }'''.stripIndent()
 
             String configAsXml = '''\
-                    <?xml version='1.0' encoding='UTF-8'?>
-                    <project>
-                      <actions/>
-                      <keepDependencies>false</keepDependencies>
-                      <properties/>
-                      <scm class="hudson.scm.NullSCM"/>
-                      <canRoam>false</canRoam>
-                      <disabled>false</disabled>
-                      <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
-                      <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-                      <triggers class="vector"/>
-                      <concurrentBuild>false</concurrentBuild>
-                      <builders/>
-                      <publishers/>
-                      <buildWrappers/>
-                    </project>'''
+                <?xml version='1.0' encoding='UTF-8'?>
+                <project>
+                  <actions/>
+                  <keepDependencies>false</keepDependencies>
+                  <properties/>
+                  <scm class="hudson.scm.NullSCM"/>
+                  <canRoam>false</canRoam>
+                  <disabled>false</disabled>
+                  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+                  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+                  <triggers class="vector"/>
+                  <concurrentBuild>false</concurrentBuild>
+                  <builders/>
+                  <publishers/>
+                  <buildWrappers/>
+                </project>'''.stripIndent()
 
         when:
             def jenkinsBuildConfigs = dslToJenkinsBuildConfigs(theDsl)
@@ -112,6 +113,7 @@ class ConfigFileSpec extends UnitSpec {
 
         then:
             xmlDiff.identical()
+            jenkinsBuildConfigs.buildJobs[0].name == 'BottomBurp-Checkout'
     }
 
 
@@ -129,7 +131,9 @@ class ConfigFileSpec extends UnitSpec {
     
     def dslToJenkinsBuildConfigs(String dslText) {
         def delegate
-        Script dslScript = new GroovyShell().parse(dslText)
+        Binding binding = new Binding()
+        binding.setVariable("appName", 'BottomBurp')
+        Script dslScript = new GroovyShell(binding).parse(dslText)
         dslScript.metaClass = createEMC(dslScript.class, {
             ExpandoMetaClass emc ->
                 emc.builds = { Closure cl ->

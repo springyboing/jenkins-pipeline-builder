@@ -43,7 +43,7 @@ class BuildJobSpec extends UnitSpec {
                 buildJob() {
                     description '${desc}'
                 }
-                """
+                """.stripIndent()
 
         when:
             def buildJob = dslToBuildJob(theDSL)
@@ -94,7 +94,7 @@ class BuildJobSpec extends UnitSpec {
                             spec '5 * * * *'
                         }
                     }
-                }"""
+                }""".stripIndent()
             String configAsXml = '''\
                 <?xml version='1.0' encoding='UTF-8'?>
                 <project>
@@ -140,7 +140,7 @@ class BuildJobSpec extends UnitSpec {
                             }
                         }
                     }
-                }"""
+                }""".stripIndent()
             String configAsXml = '''\
                 <?xml version='1.0' encoding='UTF-8'?>
                 <project>
@@ -212,7 +212,7 @@ class BuildJobSpec extends UnitSpec {
                             command 'ls -lash'
                         }
                     }
-                }"""
+                }""".stripIndent()
             String configAsXml = '''\
                 <?xml version='1.0' encoding='UTF-8'?>
                 <project>
@@ -254,7 +254,7 @@ class BuildJobSpec extends UnitSpec {
                             artifacts '/target/**'
                         }
                     }
-                }"""
+                }""".stripIndent()
             String configAsXml = '''\
                 <?xml version='1.0' encoding='UTF-8'?>
                 <project>
@@ -299,7 +299,7 @@ class BuildJobSpec extends UnitSpec {
                             }
                         }
                     }
-                }"""
+                }""".stripIndent()
             String configAsXml = '''\
                 <?xml version='1.0' encoding='UTF-8'?>
                 <project>
