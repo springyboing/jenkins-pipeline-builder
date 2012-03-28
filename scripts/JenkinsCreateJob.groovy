@@ -147,7 +147,8 @@ def configXml = """\
     }
     
     jobs.each { name, config ->
-        jenkinsArgs = ['create-job', name]
+//        jenkinsArgs = ['create-job', name]
+        jenkinsArgs = ['update-job', name]
         jenkinsInputStream = config
 
         executeJenkinsCommand()

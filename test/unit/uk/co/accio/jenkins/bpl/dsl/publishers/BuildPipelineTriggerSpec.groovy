@@ -16,19 +16,16 @@ class BuildPipelineTriggerSpec extends UnitSpec {
         XMLUnit.setNormalize(true)
     }
 
-
-    def buildPipelineTriggerXml = '''\
-<?xml version="1.0" encoding="UTF-8"?>
-<au.com.centrumsystems.hudson.plugin.buildpipeline.trigger.BuildPipelineTrigger>
-  <downstreamProjectNames>MyChildBuild</downstreamProjectNames>
-</au.com.centrumsystems.hudson.plugin.buildpipeline.trigger.BuildPipelineTrigger>
-'''
-
     def 'Build Pipeline Trigger XML'() {
 
         given:
             def delegate = new BuildPipelineTriggerDelegate()
             delegate.downstreamProjectNames = 'MyChildBuild'
+            def buildPipelineTriggerXml = '''\
+                <?xml version="1.0" encoding="UTF-8"?>
+                <au.com.centrumsystems.hudson.plugin.buildpipeline.trigger.BuildPipelineTrigger>
+                  <downstreamProjectNames>MyChildBuild</downstreamProjectNames>
+                </au.com.centrumsystems.hudson.plugin.buildpipeline.trigger.BuildPipelineTrigger>'''.stripIndent()
 
         when:
             def theXml = toXml(delegate)
@@ -45,5 +42,56 @@ class BuildPipelineTriggerSpec extends UnitSpec {
         }
         writer << builder
         return XmlUtil.serialize(writer.toString())
+    }
+
+    def 'Minimal Build Pipeline Trigger DSL'() {
+
+        given:
+            def theDSL = '''\
+                buildPipelineTrigger {
+                    downstreamProjectNames 'My Child Build'
+                }'''.stripIndent()
+            def buildPipelineTriggerXml = '''\
+                <?xml version="1.0" encoding="UTF-8"?>
+                <au.com.centrumsystems.hudson.plugin.buildpipeline.trigger.BuildPipelineTrigger>
+                    <downstreamProjectNames>My Child Build</downstreamProjectNames>
+                </au.com.centrumsystems.hudson.plugin.buildpipeline.trigger.BuildPipelineTrigger>'''.stripIndent()
+
+        when:
+            def theXml = dslToXml(theDSL)
+            def xmlDiff = new Diff(theXml, XmlUtil.serialize(buildPipelineTriggerXml))
+
+        then:
+            xmlDiff.identical()
+    }
+
+    def dslToXml(String dslText) {
+        def delegate
+        Script dslScript = new GroovyShell().parse(dslText)
+        dslScript.metaClass = createEMC(dslScript.class, {
+            ExpandoMetaClass emc ->
+                emc.buildPipelineTrigger = { Closure cl ->
+                    cl.delegate = new BuildPipelineTriggerDelegate()
+                    cl.resolveStrategy = Closure.DELEGATE_FIRST
+                    cl()
+                    delegate = cl.delegate
+                }
+        })
+        dslScript.run()
+
+        def writer = new StringWriter()
+        def builder = new StreamingMarkupBuilder().bind {
+            mkp.xmlDeclaration()
+            out << delegate
+        }
+        writer << builder
+        return XmlUtil.serialize(writer.toString())
+    }
+
+    static ExpandoMetaClass createEMC(Class clazz, Closure cl) {
+        ExpandoMetaClass emc = new ExpandoMetaClass(clazz, false)
+        cl(emc)
+        emc.initialize()
+        return emc
     }
 }

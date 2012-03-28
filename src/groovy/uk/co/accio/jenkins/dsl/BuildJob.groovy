@@ -25,6 +25,7 @@ class BuildJob implements Buildable {
         def obj = {
             "project"() {
                 'actions'([:])
+                description(description, [:])
                 'keepDependencies'(keepDependencies, [:])
                 'properties'(props, [:])
                 if (scmDelegate) {

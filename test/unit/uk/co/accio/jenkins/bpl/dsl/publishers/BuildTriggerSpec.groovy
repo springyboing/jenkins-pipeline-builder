@@ -8,6 +8,7 @@ import org.custommonkey.xmlunit.XMLUnit
 import uk.co.accio.jenkins.dsl.publishers.ArtifactArchiverDelegate
 import uk.co.accio.jenkins.dsl.publishers.BuildTriggerDelegate
 import uk.co.accio.jenkins.dsl.publishers.BuildTriggerThresholdDelegate
+import uk.co.accio.jenkins.dsl.publishers.Threshold
 
 class BuildTriggerSpec extends UnitSpec {
 
@@ -17,24 +18,22 @@ class BuildTriggerSpec extends UnitSpec {
         XMLUnit.setNormalize(true)
     }
 
-    def buildTriggerXml = '''\
-<?xml version="1.0" encoding="UTF-8"?>
-<hudson.tasks.BuildTrigger>
-<childProjects>My Child Build</childProjects>
-  <threshold>
-    <name>SUCCESS</name>
-    <ordinal>0</ordinal>
-    <color>BLUE</color>
-  </threshold>
-</hudson.tasks.BuildTrigger>
-'''
-
     def 'Child Build XML'() {
 
         given:
             def delegate = new BuildTriggerDelegate()
             delegate.childProjects = 'My Child Build'
-            delegate.threshold = new BuildTriggerThresholdDelegate(name: 'SUCCESS', ordinal: '0', color: 'BLUE')
+            delegate.threshold = Threshold.SUCCESS
+            def buildTriggerXml = '''\
+                <?xml version="1.0" encoding="UTF-8"?>
+                <hudson.tasks.BuildTrigger>
+                  <childProjects>My Child Build</childProjects>
+                  <threshold>
+                    <name>SUCCESS</name>
+                    <ordinal>0</ordinal>
+                    <color>BLUE</color>
+                  </threshold>
+                </hudson.tasks.BuildTrigger>'''.stripIndent()
 
         when:
             def theXml = toXml(delegate)
@@ -51,5 +50,88 @@ class BuildTriggerSpec extends UnitSpec {
         }
         writer << builder
         return XmlUtil.serialize(writer.toString())
+    }
+
+    def 'Full Build Trigger DSL'() {
+
+        given:
+            def theDSL = '''\
+                buildTrigger {
+                    childProjects 'My Child Build'
+                    threshold 'UNSTABLE'
+                }'''.stripIndent()
+            def buildTriggerXml = '''\
+                <?xml version="1.0" encoding="UTF-8"?>
+                <hudson.tasks.BuildTrigger>
+                  <childProjects>My Child Build</childProjects>
+                  <threshold>
+                    <name>UNSTABLE</name>
+                    <ordinal>1</ordinal>
+                    <color>YELLOW</color>
+                  </threshold>
+                </hudson.tasks.BuildTrigger>'''.stripIndent()
+
+        when:
+            def theXml = dslToXml(theDSL)
+            def xmlDiff = new Diff(theXml, XmlUtil.serialize(buildTriggerXml))
+
+        then:
+            xmlDiff.identical()
+    }
+
+    def 'Minimal Build Trigger DSL'() {
+
+        given:
+            def theDSL = '''\
+                buildTrigger {
+                    childProjects 'My Child Build'
+                }'''.stripIndent()
+            def buildTriggerXml = '''\
+                <?xml version="1.0" encoding="UTF-8"?>
+                <hudson.tasks.BuildTrigger>
+                  <childProjects>My Child Build</childProjects>
+                  <threshold>
+                    <name>SUCCESS</name>
+                    <ordinal>0</ordinal>
+                    <color>BLUE</color>
+                  </threshold>
+                </hudson.tasks.BuildTrigger>'''.stripIndent()
+
+        when:
+            def theXml = dslToXml(theDSL)
+            def xmlDiff = new Diff(theXml, XmlUtil.serialize(buildTriggerXml))
+
+        then:
+            xmlDiff.identical()
+    }
+
+    def dslToXml(String dslText) {
+        def delegate
+        Script dslScript = new GroovyShell().parse(dslText)
+        dslScript.metaClass = createEMC(dslScript.class, {
+            ExpandoMetaClass emc ->
+                emc.buildTrigger = { Closure cl ->
+                    cl.delegate = new BuildTriggerDelegate()
+                    cl.resolveStrategy = Closure.DELEGATE_FIRST
+                    cl()
+                    delegate = cl.delegate
+                }
+        })
+        dslScript.run()
+
+        def writer = new StringWriter()
+        def builder = new StreamingMarkupBuilder().bind {
+            mkp.xmlDeclaration()
+            out << delegate
+        }
+        writer << builder
+        return XmlUtil.serialize(writer.toString())
+    }
+
+    static ExpandoMetaClass createEMC(Class clazz, Closure cl) {
+        ExpandoMetaClass emc = new ExpandoMetaClass(clazz, false)
+        cl(emc)
+        emc.initialize()
+        return emc
     }
 }

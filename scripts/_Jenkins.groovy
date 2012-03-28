@@ -19,6 +19,8 @@ target(executeJenkinsCommand: "The description of the script goes here!") {
     println "args: ${jenkinsArgs}"
 
     runCliCommand(getJenkinsUrl(), jenkinsArgs, jenkinsInputStream, jenkinsOutputStream, jenkinsErrorStream)
+
+
 }
 
 target(executeJenkinsLogin: "Login to Jenkins server") {

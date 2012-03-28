@@ -60,6 +60,7 @@ class BuildJobSpec extends UnitSpec {
                 <?xml version='1.0' encoding='UTF-8'?>
                 <project>
                   <actions/>
+                  <description/>
                   <keepDependencies>false</keepDependencies>
                   <properties/>
                   <scm class="hudson.scm.NullSCM"/>
@@ -99,6 +100,7 @@ class BuildJobSpec extends UnitSpec {
                 <?xml version='1.0' encoding='UTF-8'?>
                 <project>
                   <actions/>
+                  <description/>
                   <keepDependencies>false</keepDependencies>
                   <properties/>
                   <scm class="hudson.scm.NullSCM"/>
@@ -145,6 +147,7 @@ class BuildJobSpec extends UnitSpec {
                 <?xml version='1.0' encoding='UTF-8'?>
                 <project>
                   <actions/>
+                  <description/>
                   <keepDependencies>false</keepDependencies>
                   <properties/>
                   <scm class="hudson.plugins.git.GitSCM">
@@ -217,6 +220,7 @@ class BuildJobSpec extends UnitSpec {
                 <?xml version='1.0' encoding='UTF-8'?>
                 <project>
                   <actions/>
+                  <description/>
                   <keepDependencies>false</keepDependencies>
                   <properties/>
                   <scm class="hudson.scm.NullSCM"/>
@@ -259,6 +263,7 @@ class BuildJobSpec extends UnitSpec {
                 <?xml version='1.0' encoding='UTF-8'?>
                 <project>
                   <actions/>
+                  <description/>
                   <keepDependencies>false</keepDependencies>
                   <properties/>
                   <scm class="hudson.scm.NullSCM"/>
@@ -304,6 +309,7 @@ class BuildJobSpec extends UnitSpec {
                 <?xml version='1.0' encoding='UTF-8'?>
                 <project>
                   <actions/>
+                  <description/>
                   <keepDependencies>false</keepDependencies>
                   <properties/>
                   <scm class="hudson.scm.NullSCM"/>

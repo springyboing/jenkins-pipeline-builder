@@ -9,23 +9,33 @@ package uk.co.accio.jenkins.dsl.publishers
         <color>BLUE</color>
       </threshold>
     </hudson.tasks.BuildTrigger>
+
+
+        <name>SUCCESS</name>
+        <ordinal>0</ordinal>
+        <color>BLUE</color>
+
+        <name>UNSTABLE</name>
+        <ordinal>1</ordinal>
+        <color>YELLOW</color>
+
+        <name>FAILURE</name>
+        <ordinal>2</ordinal>
+        <color>RED</color>
+
  */
 class BuildTriggerDelegate implements Buildable {
 
     String topLevelElement = "hudson.tasks.BuildTrigger"
 
     String childProjects
-    def threshold
+    Threshold threshold = Threshold.SUCCESS
 
     void childProjects(childProjects) {
         this.childProjects = childProjects
     }
-    void threshold(Closure cl) {
-        cl.delegate = new BuildTriggerThresholdDelegate()
-        cl.resolveStrategy = Closure.DELEGATE_FIRST
-        cl()
-
-        threshold = cl.delegate
+    void threshold(String threshold) {
+        this.threshold = threshold?.toUpperCase() as Threshold
     }
 
     def void build(GroovyObject builder) {
@@ -33,6 +43,33 @@ class BuildTriggerDelegate implements Buildable {
             "${topLevelElement}"() {
                 'childProjects'(childProjects, [:])
                 out << threshold
+            }
+        }
+        obj.delegate = builder
+        obj()
+    }
+}
+
+enum Threshold implements Buildable {
+
+    SUCCESS(0, 'BLUE'),
+    UNSTABLE(1, 'YELLOW'),
+    FAILURE(2, 'RED')
+
+    int ordinal
+    String color
+
+    private Threshold(ordinal, color) {
+        this.ordinal = ordinal
+        this.color = color
+    }
+
+    def void build(GroovyObject builder) {
+        def obj = {
+            'threshold'([:]) {
+                'name'(name(), [:])
+                'ordinal'(ordinal, [:])
+                'color'(color, [:])
             }
         }
         obj.delegate = builder
