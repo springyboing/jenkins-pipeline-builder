@@ -1,0 +1,32 @@
+h1. jenkins-create-job
+
+h2. Purpose
+
+Creates build job(s) on your Jenkins server.
+
+h2. Description
+
+Blur blur blur blur
+
+Usage:
+{code:java}
+grails [environment] jenkins-create-job --host=[host] --port=[port] --protocol=[protocol] --path=[path] --file=[file] --name=[name]
+{code}
+
+Required arguments: _none_ .
+
+* @@ - 
+
+Optional arguments:
+
+* @host@ - Host name of the Jenkins server (default: localhost)
+* @port@ - Port number of the Jenkins server (default: 8080)
+* @path@ - Path of the Jenkins server (default: '')
+* @protocol@ - Protocol of the Jenkins server (default: http)
+
+* @file@ - Path to Jenkins config xml file or build dsl
+* @name@ - Job name if provided with an xml config file
+
+{note}
+Note that the @host@, @port@, @path@, and @protocol@ can all be configured in the BuildConfig.groovy.  Command line takes presidence if supplied.
+{note}

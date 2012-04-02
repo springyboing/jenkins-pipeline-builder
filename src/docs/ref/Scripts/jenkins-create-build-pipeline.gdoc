@@ -1,0 +1,28 @@
+h1. jenkins-create-build-pipeline.gdoc
+
+h2. Purpose
+
+Generates a build pipeline for the current Grails application.
+
+h2. Description
+
+TODO......
+
+Asks a load of questions and generates a series of build dsls for the current Grails application.
+
+Version control
+Tests unit/integration/functional/other
+Package as War/Plugin
+
+Usage:
+{code:java}
+grails [environment] jenkins-create-build-pipeline
+{code}
+
+Required arguments: _none_ .
+
+Optional arguments:
+
+* @blur@ - Blur blur blur
+
+

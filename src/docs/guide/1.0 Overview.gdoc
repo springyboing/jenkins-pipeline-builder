@@ -1,0 +1,8 @@
+This plugin provides a configuration management tool for Jenkins form Grails.
+
+With this plugin you can:
+
+* Create Jenkins jobs
+* Update Jenkins jobs
+* Create complex Jenkins build pipelines
+* Instruct Jenkins to install plugins

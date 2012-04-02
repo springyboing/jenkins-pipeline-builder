@@ -1,0 +1,9 @@
+
+
+jenkins.host = '192.168.1.64'
+jenkins.port = '8888'
+jenkins.protocol = 'http'
+jenkins.path = ''
+jenkins.includePlugins = ['extended-choice-parameter', 'AnsiColor']
+jenkins.excludePlugins = ['setenv'] // Used to be required...  But must now be included in Jenkins.
+

@@ -1,0 +1,30 @@
+h1. jenkins
+
+h2. Purpose
+
+Execute cli commands against your Jenkins server.
+
+h2. Description
+
+Blur blur blur blur
+
+Usage:
+{code:java}
+grails [environment] jenkins --host=[host] --port=[port] --protocol=[protocol] --path=[path] params
+{code}
+
+Required arguments: _none_ .
+
+Optional arguments:
+
+* @host@ - Host name of the Jenkins server (default: localhost)
+* @port@ - Port number of the Jenkins server (default: 8080)
+* @path@ - Path of the Jenkins server (default: '')
+* @protocol@ - Protocol of the Jenkins server (default: http)
+
+* all other params are sent to the Jenkins server.  If none are provided 'help' will be sent.
+
+
+{note}
+Note that the @host@, @port@, @path@, and @protocol@ can all be configured in the BuildConfig.groovy.  Command line takes presidence if supplied.
+{note}

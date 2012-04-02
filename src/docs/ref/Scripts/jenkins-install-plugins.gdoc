@@ -1,0 +1,30 @@
+h1. jenkins-install-plugins
+
+h2. Purpose
+
+Instructs Jenkins server to install the listed plugins.
+
+h2. Description
+
+Blur blur blur blur
+
+Usage:
+{code:java}
+grails [environment] jenkins-install-plugins --host=[host] --port=[port] --protocol=[protocol] --path=[path]
+{code}
+
+Required arguments: _none_ .
+
+* @@ - 
+
+Optional arguments:
+
+* @host@ - Host name of the Jenkins server (default: localhost)
+* @port@ - Port number of the Jenkins server (default: 8080)
+* @path@ - Path of the Jenkins server (default: '')
+* @protocol@ - Protocol of the Jenkins server (default: http)
+
+{note}
+Note that the @host@, @port@, @path@, and @protocol@ can all be configured in the BuildConfig.groovy.  Command line takes presidence if supplied.
+{note}
+
