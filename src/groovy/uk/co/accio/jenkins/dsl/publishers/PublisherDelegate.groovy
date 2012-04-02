@@ -30,6 +30,14 @@ class PublisherDelegate implements Buildable {
         publishers << cl.delegate
     }
 
+    void joinTrigger(Closure cl) {
+        cl.delegate = new JoinTriggerDelegate()
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        publishers << cl.delegate
+    }
+
     void fingerprinter(Closure cl) {
         cl.delegate = new FingerprinterDelegate()
         cl.resolveStrategy = Closure.DELEGATE_FIRST

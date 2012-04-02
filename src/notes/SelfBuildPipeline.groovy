@@ -40,9 +40,9 @@ builds {
             buildTrigger {
                 childProjects "${appName}-Unit-Test,${appName}-Docs"
             }
-//            join {
-//                childProject "${appName}-Package-Plugin"
-//            }
+            joinTrigger {
+                joinProjects "${appName}-Package-Plugin"
+            }
         }
     }
 
@@ -65,9 +65,6 @@ builds {
         publishers {
             artifactArchiver {
                 artifacts '**'
-            }
-            buildTrigger {
-                childProjects "${appName}-Package-Plugin"
             }
         }
     }
