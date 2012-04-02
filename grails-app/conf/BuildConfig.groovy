@@ -18,17 +18,16 @@ grails.project.dependency.resolution = {
         mavenCentral()
         //mavenLocal()
 	    mavenRepo "http://maven.jenkins-ci.org/service/local/repositories/releases/content/"
-        mavenRepo "http://snapshots.repository.codehaus.org"
-        mavenRepo "http://repository.codehaus.org"
-        mavenRepo "http://download.java.net/maven/2/"
-        mavenRepo "http://repository.jboss.com/maven2/"
+//        mavenRepo "http://snapshots.repository.codehaus.org"
+//        mavenRepo "http://repository.codehaus.org"
+//        mavenRepo "http://download.java.net/maven/2/"
+//        mavenRepo "http://repository.jboss.com/maven2/"
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
         
 	    build "org.jenkins-ci.main:cli:1.452"
         compile 'xmlunit:xmlunit:1.3'
-
     }
 
     plugins {
@@ -44,4 +43,6 @@ jenkins.host = '192.168.1.64'
 //jenkins.port = '8888'
 //jenkins.protocol = 'http'
 //jenkins.path = ''
+jenkins.includePlugins = ['extended-choice-parameter', 'AnsiColor']
+jenkins.excludePlugins = ['setenv'] // Used to be required...  But must now be included in Jenkins.
 

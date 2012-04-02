@@ -16,19 +16,17 @@ jenkinsArgs = []
 target(executeJenkinsCommand: "The description of the script goes here!") {
     depends(configureProxy, classpath, executeJenkinsLogin)
 
-    println "args: ${jenkinsArgs}"
+    grailsConsole.updateStatus "Executing: ${getJenkinsUrl()} ${jenkinsArgs}"
 
     runCliCommand(getJenkinsUrl(), jenkinsArgs, jenkinsInputStream, jenkinsOutputStream, jenkinsErrorStream)
-
-
 }
 
 target(executeJenkinsLogin: "Login to Jenkins server") {
     depends(configureProxy, classpath)
 
     configureJenkinsServer()
-    
-    println "TODO: Login!!"
+
+    grailsConsole.updateStatus "TODO: Login!!"
 }
 
 target(configureJenkinsServerFromBuildConfig: "Configuring Jenkins Server Location from buildconfig.groovy") {
@@ -56,8 +54,6 @@ target(configureJenkinsServerFromCmdArgs: "Configuring Jenkins Server Location f
 target(configureJenkinsServer: "Configuring Jenkins Server Location") {
     configureJenkinsServerFromBuildConfig()
     configureJenkinsServerFromCmdArgs()
-
-    println "JenkinsUrl: " + getJenkinsUrl()
 }
 
 def getJenkinsUrl() {

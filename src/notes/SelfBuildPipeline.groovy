@@ -22,7 +22,7 @@ builds {
         }
         publishers {
             artifactArchiver {
-                artifacts '/**'
+                artifacts '**'
             }
             buildTrigger {
                 childProjects "${appName}-Unit-Test"
@@ -36,8 +36,7 @@ builds {
 
         builders {
             copyArtifact {
-                projectName "${appName}-Unit-Test"
-                filter "/**"
+                projectName "${appName}-Kickoff"
             }
             grails {
                 targets "test-app unit:spock"
@@ -46,7 +45,7 @@ builds {
         }
         publishers {
             artifactArchiver {
-                artifacts '/**'
+                artifacts '**'
             }
             buildTrigger {
                 childProjects "${appName}-Package-Plugin"
@@ -61,7 +60,6 @@ builds {
         builders {
             copyArtifact {
                 projectName "${appName}-Unit-Test"
-                filter "/**"
             }
             grails {
                 targets "package-plugin"

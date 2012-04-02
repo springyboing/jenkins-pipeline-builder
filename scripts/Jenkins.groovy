@@ -1,4 +1,3 @@
-includeTargets << grailsScript("_GrailsArgParsing")
 includeTargets << new File("${basedir}/scripts/_Jenkins.groovy")
 
 target(default: "Execute Command Against Jenkins Server") {
