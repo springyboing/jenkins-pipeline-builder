@@ -1,5 +1,5 @@
 //includeTargets << grailsScript("_GrailsClasspath")
-//includeTargets << grailsScript('_GrailsPackage')
+includeTargets << grailsScript('_GrailsPackage')
 includeTargets << new File("${basedir}/scripts/_Jenkins.groovy")
 
 target(default: "Creates new Job on your Jenkins server") {
@@ -58,11 +58,30 @@ target(default: "Creates new Job on your Jenkins server") {
     }
     
     jobs.each { name, config ->
-//        jenkinsArgs = ['create-job', name]
-        jenkinsArgs = ['update-job', name]
-        jenkinsInputStream = config
 
+        grailsConsole.updateStatus "Configuring ${name} job now."
+
+        jenkinsArgs = ['create-job', name]
+        jenkinsInputStream = config
+        jenkinsErrorStream =  new ByteArrayOutputStream()
         executeJenkinsCommand()
+
+        def errorResponse = jenkinsErrorStream.toString()
+        if (errorResponse.contains("already exists")) {
+
+           grailsConsole.updateStatus "Job '${name}' already exixts.  Retry but this time update the job!"
+
+            def jenkinsUpdateOnExists = true
+
+            if (jenkinsUpdateOnExists) {
+                jenkinsArgs = ['update-job', name]
+                jenkinsInputStream = config
+                jenkinsErrorStream = System.out
+                executeJenkinsCommand()
+            }
+        }
+
+        grailsConsole.updateStatus "Jenkins create/update complete"
     }
 }
 

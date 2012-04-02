@@ -25,7 +25,6 @@ class JenkinsBuildsDelegate {
         cl()
 
         buildJobs << cl.delegate
-        println "BuildJob: ${name}"
     }
 
     static String toBuildConfig(buildJob) {
