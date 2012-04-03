@@ -1,4 +1,3 @@
-
 def disablePipeline = false
 def targetDir = 'jpb'
 def grailsVersion = 'Grails 2.0.1'

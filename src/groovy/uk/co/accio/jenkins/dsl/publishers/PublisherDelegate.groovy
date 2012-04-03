@@ -70,6 +70,14 @@ class PublisherDelegate implements Buildable {
         publishers << cl.delegate
     }
 
+    void invokeBatchTasks(Closure cl) {
+        cl.delegate = new BatchTaskInvokerDelegate()
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        publishers << cl.delegate
+    }
+
     def void build(GroovyObject builder){
         def obj = {
             "${topLevelElement}"() {
