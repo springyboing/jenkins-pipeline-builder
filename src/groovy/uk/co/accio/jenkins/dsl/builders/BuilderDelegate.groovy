@@ -1,8 +1,5 @@
 package uk.co.accio.jenkins.dsl.builders
 
-import uk.co.accio.jenkins.dsl.builders.GrailsDelegate
-import uk.co.accio.jenkins.dsl.builders.CopyArtifactDelegate
-
 class BuilderDelegate implements Buildable {
 
     String topLevelElement = 'builders'
@@ -26,6 +23,22 @@ class BuilderDelegate implements Buildable {
 
     void shell(Closure cl) {
         cl.delegate = new ShellDelegate()
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        builders << cl.delegate
+    }
+
+    void gradle(Closure cl) {
+        cl.delegate = new GradleDelegate()
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        builders << cl.delegate
+    }
+
+    void groovy(Closure cl) {
+        cl.delegate = new GroovyDelegate()
         cl.resolveStrategy = Closure.DELEGATE_FIRST
         cl()
 
