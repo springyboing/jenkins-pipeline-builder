@@ -27,7 +27,7 @@ class GrailsDelegate implements Buildable {
     String _projectBaseDir
     String _serverPort
     String _properties
-    Boolean _forceUpgrade = true
+    Boolean _forceUpgrade = false
     Boolean _nonInteractive = true
 
     void topLevelElement(tle) {

@@ -26,13 +26,13 @@ grails.project.dependency.resolution = {
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
         
-	    build "org.jenkins-ci.main:cli:1.452"
+	    build "org.jenkins-ci.main:cli:1.452" 
         compile 'xmlunit:xmlunit:1.3'
     }
 
     plugins {
         build(":tomcat:$grailsVersion",
-              ":release:1.0.0") {
+              ":release:1.0.1") {
             export = false
         }
         compile ":spock:0.6"

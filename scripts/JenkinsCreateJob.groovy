@@ -1,6 +1,5 @@
-//includeTargets << grailsScript("_GrailsClasspath")
 includeTargets << grailsScript('_GrailsPackage')
-includeTargets << new File("${basedir}/scripts/_Jenkins.groovy")
+includeTargets << new File("$jenkinsPipelineBuilderPluginDir/scripts/_Jenkins.groovy")
 
 target(default: "Creates new Job on your Jenkins server") {
     depends(classpath, compile)
@@ -49,7 +48,7 @@ target(default: "Creates new Job on your Jenkins server") {
 
     } else if (argsMap.file && !new File(argsMap.file).exists()) {
 
-            grailsConsole.error 'File Not Found: ' + argsMap.file
+            event "StatusError",  ['File Not Found: ' + argsMap.file]
             exit 1
     } else {
         
@@ -59,7 +58,7 @@ target(default: "Creates new Job on your Jenkins server") {
     
     jobs.each { name, config ->
 
-        grailsConsole.updateStatus "Configuring ${name} job now."
+        event "StatusUpdate", ["Configuring ${name} job now."]
 
         jenkinsArgs = ['create-job', name]
         jenkinsInputStream = config
@@ -69,7 +68,7 @@ target(default: "Creates new Job on your Jenkins server") {
         def errorResponse = jenkinsErrorStream.toString()
         if (errorResponse.contains("already exists")) {
 
-           grailsConsole.updateStatus "Job '${name}' already exixts.  Retry but this time update the job!"
+           event "StatusUpdate", ["Job '${name}' already exixts.  Retry but this time update the job!"]
 
             def jenkinsUpdateOnExists = true
 
@@ -81,7 +80,7 @@ target(default: "Creates new Job on your Jenkins server") {
             }
         }
 
-        grailsConsole.updateStatus "Jenkins create/update complete"
+        event "StatusUpdate", ["Jenkins create/update complete"]
     }
 }
 
@@ -93,14 +92,16 @@ Map loadJobsFromGroovyDslFile (String dslFile ) {
     buildConfigurator.runJenkinsBuilder(new File(dslFile))
 
     List buildJobs = buildConfigurator.buildConfig.buildJobs
+	Map buildJobMap = [:]
     if (buildJobs && !buildJobs.isEmpty()) {
-        return buildJobs.collectEntries {
-            // TODO - Don't like the ByteArrayInputStream...  Why not leave as string until passed to jenkins?
-            [it.name, new ByteArrayInputStream(it.toBuildConfigXml().getBytes())]
-        }
-    } else {
-        return [:]
+	
+		println "BuildJobs: " + buildJobs
+
+		for(buildJob in buildJobs) {
+			buildJobMap.put(buildJob.name, new ByteArrayInputStream(buildJob.toBuildConfigXml().getBytes()))
+		}
     }
+	return buildJobMap
 }
 
 

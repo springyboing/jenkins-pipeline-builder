@@ -1,7 +1,10 @@
 import hudson.cli.CLI
+import java.security.KeyPair
 
+includeTargets << grailsScript("_GrailsArgParsing")
 includeTargets << grailsScript("_GrailsClasspath")
 includeTargets << grailsScript("_GrailsProxy")
+includeTargets << grailsScript('_GrailsPackage')
 
 // Defaults...
 jenkinsHost = 'localhost'
@@ -14,9 +17,9 @@ jenkinsErrorStream = System.err
 jenkinsArgs = []
 
 target(executeJenkinsCommand: "The description of the script goes here!") {
-    depends(configureProxy, classpath, executeJenkinsLogin)
+    depends(configureProxy, classpath, configureJenkinsServer)
 
-    grailsConsole.updateStatus "Executing: ${getJenkinsUrl()} ${jenkinsArgs}"
+    event "StatusUpdate", ["Executing: ${getJenkinsUrl()} ${jenkinsArgs}"]
 
     runCliCommand(getJenkinsUrl(), jenkinsArgs, jenkinsInputStream, jenkinsOutputStream, jenkinsErrorStream)
 }
@@ -26,7 +29,7 @@ target(executeJenkinsLogin: "Login to Jenkins server") {
 
     configureJenkinsServer()
 
-    grailsConsole.updateStatus "TODO: Login!!"
+	event "StatusUpdate", ["TODO: Login!!"]
 }
 
 target(configureJenkinsServerFromBuildConfig: "Configuring Jenkins Server Location from buildconfig.groovy") {
@@ -61,7 +64,16 @@ def getJenkinsUrl() {
 }
 
 def runCliCommand(URL rootUrl, List<String> args, InputStream input = System.in, OutputStream output = System.out, OutputStream err = System.err) {
-    def CLI cli = new CLI(rootUrl)
+    
+	println "PKI: " + buildConfig.jenkins.pkifile
+	println "PKI File: " + new File(buildConfig.jenkins.pkifile).exists()
+	KeyPair keyPair = CLI.loadKey(new File(buildConfig.jenkins.pkifile))
+	
+	
+	CLI cli = new CLI(rootUrl)
+	if (keyPair) {
+		cli.authenticate(keyPair)
+	}
     cli.execute(args, input, output, err)
     cli.close()
 }
