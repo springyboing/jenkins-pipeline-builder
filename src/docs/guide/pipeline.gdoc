@@ -1,0 +1,16 @@
+
+
+
+checkout
+unit test
+integration test    -> 3rd Party Test (my fail)
+functional tests
+performance tests  (nightly based on last sucessful build)
+code review
+war
+deploy
+
+deploy 2 blue
+deploy 2 green
+deploy cut over
+

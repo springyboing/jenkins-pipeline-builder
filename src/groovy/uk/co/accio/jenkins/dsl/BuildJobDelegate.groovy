@@ -5,6 +5,7 @@ import uk.co.accio.jenkins.dsl.scms.ScmDelegate
 import uk.co.accio.jenkins.dsl.builders.BuilderDelegate
 import uk.co.accio.jenkins.dsl.wrappers.BuilderWrapperDelegate
 import uk.co.accio.jenkins.dsl.publishers.PublisherDelegate
+import uk.co.accio.jenkins.dsl.other.BatchTask
 
 class BuildJobDelegate extends BuildJob {
 
@@ -73,6 +74,14 @@ class BuildJobDelegate extends BuildJob {
 
     void publishers(Closure cl) {
         cl.delegate = new PublisherDelegate()
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        publisherDelegate = cl.delegate
+    }
+
+    void extras(Closure cl) {
+        cl.delegate = new BatchTask()
         cl.resolveStrategy = Closure.DELEGATE_FIRST
         cl()
 

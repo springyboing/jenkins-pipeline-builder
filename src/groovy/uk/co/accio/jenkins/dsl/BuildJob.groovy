@@ -20,6 +20,7 @@ class BuildJob implements Buildable {
     def builderDelegate
     def buildWrapperDelegate
     def publisherDelegate
+    def extrasDelegate
 
     def void build(GroovyObject builder){
         def obj = {

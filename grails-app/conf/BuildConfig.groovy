@@ -34,6 +34,7 @@ grails.project.dependency.resolution = {
         build(":tomcat:$grailsVersion",
               ":release:1.0.1") {
             export = false
+            excludes "svn", 'nekohtml'
         }
         compile ":spock:0.6"
     }
