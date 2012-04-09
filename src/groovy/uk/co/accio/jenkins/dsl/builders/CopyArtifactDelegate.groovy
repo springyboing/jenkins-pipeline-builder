@@ -115,7 +115,7 @@ class SelectorDelegate implements Buildable {
     Boolean fallbackToLastSuccessful = false // TriggeredBuildSelector
     String parameterName    // ParameterizedBuildSelector
     String buildNumber      // SpecificBuildSelector
-    String permalink        // Permalink
+    Permalink permalink        // Permalink
 
     public SelectorDelegate(){}
     public SelectorDelegate(String selector) {
@@ -137,8 +137,11 @@ class SelectorDelegate implements Buildable {
     void parameterName(parameterName) {
         this.parameterName = parameterName
     }
-    void permalink(permalink) {
-        this.permalink = permalink
+    void buildNumber(buildNumber) {
+        this.buildNumber = buildNumber
+    }
+    void permalink(String permalink) {
+        this.permalink = permalink?.toUpperCase() as Permalink
     }
 
     def void build(GroovyObject builder){
@@ -152,7 +155,7 @@ class SelectorDelegate implements Buildable {
                         'fallbackToLastSuccessful'(fallbackToLastSuccessful, [:])
                         break
                     case BuildSelector.Permalink:
-                        'id'(permalink, [:])
+                        'id'(permalink.status, [:])
                         break
                     case BuildSelector.Specific:
                         'buildNumber'(buildNumber, [:])
@@ -183,7 +186,7 @@ class SelectorDelegate implements Buildable {
  <select filldependson="../projectName" fillurl="/job/JenkinsPipelineBuilder-Package-Plugin/descriptorByName/hudson.plugins.copyartifact.PermalinkBuildSelector/fillIdItems" name="_.id" value="" class="setting-input  select "><option value="lastBuild">Last build</option><option value="lastStableBuild">Last stable build</option><option value="lastSuccessfulBuild">Last successful build</option><option value="lastFailedBuild">Last failed build</option><option value="lastUnstableBuild">Last unstable build</option><option value="lastUnsuccessfulBuild">Last unsuccessful build</option></select>
 
  */
-enum BuildSelector implements Buildable {
+enum BuildSelector {
 
     Status('Latest successful build', 'hudson.plugins.copyartifact.StatusBuildSelector'), // Default (0)
     Saved('Latest saved build (marked "keep forever")', "hudson.plugins.copyartifact.SavedBuildSelector"), //(1)
@@ -200,15 +203,22 @@ enum BuildSelector implements Buildable {
         this.description = description
         this.clazz = selectorClass
     }
+}
 
-    // TODO: Handle all cases of build selector.
-    def void build(GroovyObject builder){
-        def obj = {
-            'selector'([class: selectorClass]) {
-                'fallbackToLastSuccessful'(true, [:])
-            }
-        }
-        obj.delegate = builder
-        obj()
+enum Permalink {
+
+    LAST_BUILD('lastBuild', 'Last build'),
+    LAST_STABLE_BUILD('lastStableBuild', 'Last stable build'),
+    LAST_SUCCESSFUL_BUILD('lastSuccessfulBuild', 'Last successful build'),
+    LAST_FAILED_BUILD('lastFailedBuild','Last failed build'),
+    LAST_UNSTABLE_BUILD('lastUnstableBuild','Last unstable build'),
+    LAST_UNSUCCESSFUL_BUILD('lastUnsuccessfulBuild','Last unsuccessful build')
+
+    String status
+    String description
+
+    private Permalink(status, desc) {
+        this.status = status
+        this.description = desc
     }
 }
