@@ -8,6 +8,8 @@ import org.custommonkey.xmlunit.Diff
 import org.custommonkey.xmlunit.Difference
 import org.custommonkey.xmlunit.XMLUnit
 import uk.co.accio.jenkins.dsl.builders.CopyArtifactDelegate
+import uk.co.accio.jenkins.dsl.builders.BuildSelector
+import uk.co.accio.jenkins.dsl.builders.SelectorDelegate
 
 class CopyArtifactSpec extends UnitSpec {
 
@@ -17,36 +19,31 @@ class CopyArtifactSpec extends UnitSpec {
         XMLUnit.setNormalize(true)
     }
 
-    def copyArtifactXml = '''\
-<?xml version="1.0" encoding="UTF-8"?>
-<hudson.plugins.copyartifact.CopyArtifact>
-  <projectName>BobJob-1330875179638</projectName>
-  <filter>/**/*</filter>
-  <target>blur</target>
-  <selector class="hudson.plugins.copyartifact.TriggeredBuildSelector"/>
-</hudson.plugins.copyartifact.CopyArtifact>
-'''
-
-    def 'Copy Artifact Builder XML'() {
+    def 'Copy from Latest successful build XML'() {
 
         given:
+            def copyArtifactXml = '''\
+                <hudson.plugins.copyartifact.CopyArtifact>
+                  <projectName>BlurJob</projectName>
+                  <filter></filter>
+                  <target></target>
+                  <selector class="hudson.plugins.copyartifact.StatusBuildSelector">
+                    <stable>true</stable>
+                  </selector>
+                </hudson.plugins.copyartifact.CopyArtifact>'''.stripIndent()
+
             def delegate = new CopyArtifactDelegate()
-            delegate.projectName = 'BobJob-1330875179638'
-            delegate.filter = "/**/*"
-            delegate.target = 'blur'
+            delegate.projectName = 'BlurJob'
+            delegate.filter = ''
+            delegate.target = ''
+            delegate.selectorDelegate = new SelectorDelegate(selector: BuildSelector.Status, stable: true)
 
         when:
             def theXml = toXml(delegate)
             def xmlDiff = new Diff(theXml, XmlUtil.serialize(copyArtifactXml))
-            DetailedDiff dd = new DetailedDiff(xmlDiff)
-            dd.getAllDifferences().each {
-                Difference d = (Difference) it
-                println('---------------------------------------------')
-                println(d)
-            }
 
         then:
-            xmlDiff.similar()
+            xmlDiff.identical()
     }
 
     String toXml(object) {
@@ -58,23 +55,184 @@ class CopyArtifactSpec extends UnitSpec {
         return XmlUtil.serialize(writer.toString())
     }
 
-    def 'Full Copy Artifact DSL'() {
+    def 'Copy from Latest successful build DSL'() {
 
         given:
+            def copyArtifactXml = '''\
+                <hudson.plugins.copyartifact.CopyArtifact>
+                  <projectName>BlurJob</projectName>
+                  <filter>/**/*</filter>
+                  <target>blur</target>
+                  <selector class="hudson.plugins.copyartifact.StatusBuildSelector">
+                    <stable>true</stable>
+                  </selector>
+                </hudson.plugins.copyartifact.CopyArtifact>'''.stripIndent()
+
             def theDSL = '''\
                 copyArtifact {
-                        projectName 'BobJob-1330875179638'
-                        target 'blur'
-                        filter "/**/*"
-                }
-                '''
+                    projectName 'BlurJob'
+                    filter "/**/*"
+                    target 'blur'
+                    when {
+                        selector 'Status'
+                        stable true
+                    }
+                }'''.stripIndent()
 
         when:
             def theXml = dslToXml(theDSL)
             def xmlDiff = new Diff(theXml, XmlUtil.serialize(copyArtifactXml))
 
         then:
-            xmlDiff.similar()
+            xmlDiff.identical()
+    }
+
+    def 'Copy from Upstream build that triggered this job XML'() {
+
+        given:
+            def copyArtifactXml = '''\
+                <hudson.plugins.copyartifact.CopyArtifact>
+                  <projectName>BlurJob</projectName>
+                  <filter></filter>
+                  <target></target>
+                  <selector class="hudson.plugins.copyartifact.TriggeredBuildSelector">
+                    <fallbackToLastSuccessful>true</fallbackToLastSuccessful>
+                  </selector>
+                </hudson.plugins.copyartifact.CopyArtifact>'''.stripIndent()
+
+            def delegate = new CopyArtifactDelegate()
+            delegate.projectName = 'BlurJob'
+            delegate.selectorDelegate = new SelectorDelegate(selector: BuildSelector.Triggered, fallbackToLastSuccessful: true)
+
+        when:
+            def theXml = toXml(delegate)
+            def xmlDiff = new Diff(theXml, XmlUtil.serialize(copyArtifactXml))
+
+        then:
+            xmlDiff.identical()
+    }
+
+    def 'Copy from Upstream build that triggered this job DSL'() {
+
+        given:
+            def copyArtifactXml = '''\
+                    <hudson.plugins.copyartifact.CopyArtifact>
+                      <projectName>BlurJob</projectName>
+                      <filter>/**/*</filter>
+                      <target>blur</target>
+                      <selector class="hudson.plugins.copyartifact.TriggeredBuildSelector">
+                        <fallbackToLastSuccessful>true</fallbackToLastSuccessful>
+                      </selector>
+                    </hudson.plugins.copyartifact.CopyArtifact>'''.stripIndent()
+
+            def theDSL = '''\
+                    copyArtifact {
+                        projectName 'BlurJob'
+                        filter "/**/*"
+                        target 'blur'
+                        when {
+                            selector 'Triggered'
+                            fallbackToLastSuccessful true
+                        }
+                    }'''.stripIndent()
+
+        when:
+            def theXml = dslToXml(theDSL)
+            def xmlDiff = new Diff(theXml, XmlUtil.serialize(copyArtifactXml))
+
+        then:
+            xmlDiff.identical()
+    }
+
+    def 'Minimal Copy from build DSL'() {
+
+        given:
+        def copyArtifactXml = '''\
+                    <hudson.plugins.copyartifact.CopyArtifact>
+                      <projectName>BlurJob</projectName>
+                      <filter></filter>
+                      <target></target>
+                      <selector class="hudson.plugins.copyartifact.StatusBuildSelector">
+                        <stable>false</stable>
+                      </selector>
+                    </hudson.plugins.copyartifact.CopyArtifact>'''.stripIndent()
+
+        def theDSL = '''\
+                    copyArtifact {
+                        projectName 'BlurJob'
+                        when {
+                            selector 'Status'
+                        }
+                    }'''.stripIndent()
+
+        when:
+        def theXml = dslToXml(theDSL)
+        def xmlDiff = new Diff(theXml, XmlUtil.serialize(copyArtifactXml))
+
+        then:
+        xmlDiff.identical()
+    }
+
+    def 'Optional with minimal Copy from build DSL'() {
+
+        given:
+        def copyArtifactXml = '''\
+                    <hudson.plugins.copyartifact.CopyArtifact>
+                      <projectName>BlurJob</projectName>
+                      <filter></filter>
+                      <target></target>
+                      <selector class="hudson.plugins.copyartifact.StatusBuildSelector">
+                        <stable>false</stable>
+                      </selector>
+                      <optional>true</optional>
+                    </hudson.plugins.copyartifact.CopyArtifact>'''.stripIndent()
+
+        def theDSL = '''\
+                    copyArtifact {
+                        projectName 'BlurJob'
+                        optional true
+                        when {
+                            selector 'Status'
+                        }
+                    }'''.stripIndent()
+
+        when:
+        def theXml = dslToXml(theDSL)
+        def xmlDiff = new Diff(theXml, XmlUtil.serialize(copyArtifactXml))
+
+        then:
+        xmlDiff.identical()
+    }
+
+    def 'Flatten with minimal Copy from build DSL'() {
+
+        given:
+        def copyArtifactXml = '''\
+                    <hudson.plugins.copyartifact.CopyArtifact>
+                      <projectName>BlurJob</projectName>
+                      <filter></filter>
+                      <target></target>
+                      <selector class="hudson.plugins.copyartifact.StatusBuildSelector">
+                        <stable>false</stable>
+                      </selector>
+                      <flatten>true</flatten>
+                    </hudson.plugins.copyartifact.CopyArtifact>'''.stripIndent()
+
+        def theDSL = '''\
+                    copyArtifact {
+                        projectName 'BlurJob'
+                        flatten true
+                        when {
+                            selector 'Status'
+                        }
+                    }'''.stripIndent()
+
+        when:
+        def theXml = dslToXml(theDSL)
+        def xmlDiff = new Diff(theXml, XmlUtil.serialize(copyArtifactXml))
+
+        then:
+        xmlDiff.identical()
     }
 
     def dslToXml(String dslText) {
