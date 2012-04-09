@@ -23,12 +23,10 @@ class BatchTask implements Buildable {
     def void build(GroovyObject builder){
         def obj = {
             "${topLevelElement}"() {
-                if (tasks) {
+                'tasks'([:]) {
                     for (task in tasks) {
                         out << task
                     }
-                } else {
-                    tasks([:])
                 }
             }
         }

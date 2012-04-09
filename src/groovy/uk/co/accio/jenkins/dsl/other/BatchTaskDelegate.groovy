@@ -10,15 +10,16 @@ class BatchTaskDelegate extends BatchTask {
 
         tasks << cl.delegate
     }
+}
+class Task implements Buildable {
 
-    class Task implements Buildable {
+    String topLevelElement = "hudson.plugins.batch__task.BatchTask"
+    String _name
+    String _script
 
-        String _name
-        String _script
-
-        def void build(GroovyObject builder){
+    def void build(GroovyObject builder) {
         def obj = {
-            "task"([:]) {
+            "${topLevelElement}"([:]) {
                 'name'(_name, [:])
                 'script'(_script, [:])
             }
@@ -26,15 +27,15 @@ class BatchTaskDelegate extends BatchTask {
         obj.delegate = builder
         obj()
     }
+}
+
+class TaskDelegate extends Task {
+
+    void name(name) {
+        this._name = name
     }
 
-    class TaskDelegate extends Task {
-
-        void name(name) {
-            this._name
-        }
-        void script(script) {
-            this._script
-        }
+    void script(script) {
+        this._script = script
     }
 }

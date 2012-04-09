@@ -28,7 +28,13 @@ class BuildJob implements Buildable {
                 'actions'([:])
                 description(description, [:])
                 'keepDependencies'(keepDependencies, [:])
-                'properties'(props, [:])
+                if (extrasDelegate) {
+                    'properties'([:]) {
+                        out << extrasDelegate
+                    }
+                } else {
+                    'properties'(props, [:])
+                }
                 if (scmDelegate) {
                     out << scmDelegate
                 } else {

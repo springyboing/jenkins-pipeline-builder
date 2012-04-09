@@ -341,6 +341,57 @@ class BuildJobSpec extends UnitSpec {
             xmlDiff.identical()
     }
 
+    def 'Simplest BuildJob DSL with extras'() {
+
+        setup:
+            String theDsl = """\
+                buildJob {
+                    extras {
+                        batchTasks {
+                            task {
+                                name 'Current uptime'
+                                script 'uptime'
+                            }
+                        }
+                    }
+                }""".stripIndent()
+            String configAsXml = '''\
+                <?xml version='1.0' encoding='UTF-8'?>
+                <project>
+                  <actions/>
+                  <description/>
+                  <keepDependencies>false</keepDependencies>
+                  <properties>
+                    <hudson.plugins.batch__task.BatchTaskProperty>
+                      <tasks>
+                        <hudson.plugins.batch__task.BatchTask>
+                          <name>Current uptime</name>
+                          <script>uptime</script>
+                        </hudson.plugins.batch__task.BatchTask>
+                      </tasks>
+                    </hudson.plugins.batch__task.BatchTaskProperty>
+                  </properties>
+                  <scm class="hudson.scm.NullSCM"/>
+                  <canRoam>false</canRoam>
+                  <disabled>false</disabled>
+                  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+                  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+                  <triggers class="vector"/>
+                  <concurrentBuild>false</concurrentBuild>
+                  <builders/>
+                  <publishers/>
+                  <buildWrappers/>
+                </project>'''.stripIndent()
+
+        when:
+            def buildJob = dslToBuildJob(theDsl)
+            def buildXml = toBuildConfig(buildJob)
+            def xmlDiff = new Diff(configAsXml, buildXml)
+
+        then:
+            xmlDiff.identical()
+    }
+
     def dslToBuildJob(String dslText) {
         def delegate
         Script dslScript = new GroovyShell().parse(dslText)
