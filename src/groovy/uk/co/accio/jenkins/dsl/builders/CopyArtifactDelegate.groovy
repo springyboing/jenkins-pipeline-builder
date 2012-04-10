@@ -50,7 +50,7 @@ class CopyArtifactDelegate implements Buildable {
     Boolean flatten = false
     Boolean optional = false
 
-    SelectorDelegate selectorDelegate
+    SelectorDelegate selectorDelegate = new SelectorDelegate(selector: BuildSelector.Triggered)     // Should change to be more like Jenkins default of 'Status'
 
     void topLevelElement(tle) {
         this.topLevelElement = tle
