@@ -1,0 +1,144 @@
+h1. Copy Artifact Builder
+
+h2. Purpose
+
+Adds a build step to copy artifacts from another project
+
+h2. Description
+
+Usage:
+{code}
+copyArtifact {
+    from '<job name>'
+    filterBy "<filter pattern>"
+    targetDir '<target dir>'
+    when {
+        selector '<build selector>' {
+        // extras depend on selector type
+        }
+    }
+}
+{code}
+
+Required arguments:
+
+@from@ (or projectName): Name of source project for copying of artifact(s).
+
+@when@: How to select the build to copy artifacts from, such as latest successful or stable build, or latest "keep forever" build. Other plugins may provide additional selections.
+
+Optional arguments:
+
+@filteredBy@ (or filter): Relative paths to artifact(s) to copy or leave blank to copy all artifacts. Check the /artifact/ browser of a build to see the relative paths to use here, as the build page typically hides intermediate directories. Can use wildcards like module/dist/**/*.zip, and use comma (followed by optional whitespace) to separate multiple entries. See the _includes_ of Ant fileset for the exact format.
+
+@targetDir@ (or target): Target base directory for copy, or leave blank to use the workspace. Directory (and parent directories, if any) will be created if needed.
+
+@flatten@ (default=false):
+
+@optional@ (default=false):
+
+h2. Example
+
+h3. Copy from Latest successful build
+{code}
+copyArtifact {
+    from '<job name>'
+    when {
+        selector 'Status'
+        stable true
+    }
+}
+{code}
+
+Optional arguments:
+
+@stable@: Stable build only. (true or false, defaults to false)
+
+h3. Copy from Upstream build that triggered this job
+{code}
+copyArtifact {
+    from '<job name>'
+    when {
+        selector 'Triggered'
+        fallbackToLastSuccessful true
+    }
+}
+{code}
+
+Required arguments:
+
+@fallbackToLastSuccessful@:  Fall back to the last successful build. (true or false, defaults to false)
+
+h3. Copy from Latest saved build (marked "keep forever")
+{code}
+copyArtifact {
+    from '<job name>'
+    when {
+        selector 'Saved'
+    }
+}
+{code}
+
+h3. Copy Specified by permalink
+{code}
+copyArtifact {
+    from '<job name>'
+    when {
+        selector 'Permalink'
+        permalink 'last_build'
+    }
+}
+{code}
+
+Required arguments:
+
+@permalink@: See below.
+
+{table}
+ *permalink* | *Description*
+LAST_BUILD | Last build
+LAST_STABLE_BUILD | Last stable build
+LAST_SUCCESSFUL_BUILD | Last successful build
+LAST_FAILED_BUILD | Last failed build
+LAST_UNSTABLE_BUILD | Last unstable build
+LAST_UNSUCCESSFUL_BUILD | Last unsuccessful build
+{table}
+
+h3. Copy Specific build
+{code}
+copyArtifact {
+    from '<job name>'
+    when {
+        selector 'Specific'
+        buildNumber '123'
+    }
+}
+{code}
+
+Required arguments:
+
+@buildNumber@:
+
+h3. Copy from WORKSPACE of latest completed build
+{code}
+copyArtifact {
+    from '<job name>'
+    when {
+        selector 'Workspace'
+    }
+}
+{code}
+
+h3. Copy Specified by a build parameter
+{code}
+copyArtifact {
+    from '<job name>'
+    when {
+        selector 'Parameterized'
+        parameterName 'BUILD_SELECTOR'
+    }
+}
+{code}
+
+Required arguments:
+
+@parameterName@:
