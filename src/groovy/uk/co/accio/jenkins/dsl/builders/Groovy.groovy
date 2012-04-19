@@ -27,7 +27,7 @@ package uk.co.accio.jenkins.dsl.builders
 class Groovy implements Buildable {
 
     String topLevelElement = "hudson.plugins.groovy.Groovy"
-    String _name
+    String _name = '(Default)'
     String _parameters
     String _scriptParameters
     String _properties

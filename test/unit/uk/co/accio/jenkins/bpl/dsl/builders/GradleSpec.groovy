@@ -1,27 +1,31 @@
 package uk.co.accio.jenkins.bpl.dsl.builders
 
-import grails.plugin.spock.UnitSpec
-import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil
 import org.custommonkey.xmlunit.Diff
-import org.custommonkey.xmlunit.XMLUnit
 import uk.co.accio.jenkins.dsl.builders.GradleDelegate
+import uk.co.accio.jenkins.bpl.dsl.AbstractDslTester
 
-class GradleSpec extends UnitSpec {
+class GradleSpec extends AbstractDslTester {
 
     def setupSpec() {
-        XMLUnit.setIgnoreWhitespace(true)
-        XMLUnit.setNormalizeWhitespace(true)
-        XMLUnit.setNormalize(true)
+        delegateClass = GradleDelegate
+        rootName = GradleDelegate.name
     }
-
-    def gradleXml = '''\
-            <?xml version="1.0" encoding="UTF-8"?>
-            '''.stripIndent()
 
     def 'Gradle Builder XML'() {
 
         given:
+            def gradleXml = '''\
+                <?xml version="1.0" encoding="UTF-8"?>
+                <hudson.plugins.gradle.Gradle>
+                      <description>A</description>
+                      <switches>B</switches>
+                      <tasks>C</tasks>
+                      <rootBuildScriptDir>D</rootBuildScriptDir>
+                      <buildFile>E</buildFile>
+                      <gradleName>(Default)</gradleName>
+                      <useWrapper>true</useWrapper>
+                </hudson.plugins.gradle.Gradle>'''.stripIndent()
             def delegate = new GradleDelegate()
 
         when:
@@ -32,18 +36,20 @@ class GradleSpec extends UnitSpec {
             xmlDiff.identical()
     }
 
-    String toXml(object) {
-        def writer = new StringWriter()
-        def builder = new StreamingMarkupBuilder().bind {
-            out << object
-        }
-        writer << builder
-        return XmlUtil.serialize(writer.toString())
-    }
-
     def 'Complete Gradle DSL with file'() {
 
         given:
+            def gradleXml = '''\
+                <?xml version="1.0" encoding="UTF-8"?>
+                <hudson.plugins.gradle.Gradle>
+                      <description>A</description>
+                      <switches>B</switches>
+                      <tasks>C</tasks>
+                      <rootBuildScriptDir>D</rootBuildScriptDir>
+                      <buildFile>E</buildFile>
+                      <gradleName>(Default)</gradleName>
+                      <useWrapper>true</useWrapper>
+                </hudson.plugins.gradle.Gradle>'''.stripIndent()
             def theDSL = '''\
                     gradle {
                         name 'Default'
@@ -67,6 +73,17 @@ class GradleSpec extends UnitSpec {
     def 'Minimul Gradle DSL'() {
 
         given:
+            def gradleXml = '''\
+                <?xml version="1.0" encoding="UTF-8"?>
+                <hudson.plugins.gradle.Gradle>
+                      <description>A</description>
+                      <switches>B</switches>
+                      <tasks>C</tasks>
+                      <rootBuildScriptDir>D</rootBuildScriptDir>
+                      <buildFile>E</buildFile>
+                      <gradleName>(Default)</gradleName>
+                      <useWrapper>true</useWrapper>
+                </hudson.plugins.gradle.Gradle>'''.stripIndent()
             def theDSL = '''\
                     gradle {
                     }
@@ -78,35 +95,5 @@ class GradleSpec extends UnitSpec {
 
         then:
             xmlDiff.identical()
-    }
-
-    def dslToXml(String dslText) {
-        def delegate
-        Script dslScript = new GroovyShell().parse(dslText)
-        dslScript.metaClass = createEMC(dslScript.class, {
-            ExpandoMetaClass emc ->
-                emc.gradle = { Closure cl ->
-                    cl.delegate = new GradleDelegate()
-                    cl.resolveStrategy = Closure.DELEGATE_FIRST
-                    cl()
-                    delegate = cl.delegate
-                }
-        })
-        dslScript.run()
-
-        def writer = new StringWriter()
-        def builder = new StreamingMarkupBuilder().bind {
-            mkp.xmlDeclaration()
-            out << delegate
-        }
-        writer << builder
-        return XmlUtil.serialize(writer.toString())
-    }
-
-    static ExpandoMetaClass createEMC(Class clazz, Closure cl) {
-        ExpandoMetaClass emc = new ExpandoMetaClass(clazz, false)
-        cl(emc)
-        emc.initialize()
-        return emc
     }
 }

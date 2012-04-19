@@ -19,6 +19,8 @@ package uk.co.accio.jenkins.dsl.builders
  */
 class GrailsDelegate implements Buildable {
 
+    static String name = 'grails'
+
     String _topLevelElement = 'com.g2one.hudson.grails.GrailsBuilder'
     String _name = '(Default)'
     String _targets

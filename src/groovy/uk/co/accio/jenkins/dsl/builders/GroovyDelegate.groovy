@@ -13,6 +13,8 @@ package uk.co.accio.jenkins.dsl.builders
  */
 class GroovyDelegate extends Groovy {
 
+    static String name = 'groovy'
+
     void file(file) {
         this._file = file
     }

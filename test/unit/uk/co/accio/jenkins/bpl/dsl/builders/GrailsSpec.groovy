@@ -1,20 +1,16 @@
 package uk.co.accio.jenkins.bpl.dsl.builders
 
-import grails.plugin.spock.UnitSpec
 import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil
-import org.custommonkey.xmlunit.DetailedDiff
 import org.custommonkey.xmlunit.Diff
-import org.custommonkey.xmlunit.Difference
-import org.custommonkey.xmlunit.XMLUnit
 import uk.co.accio.jenkins.dsl.builders.GrailsDelegate
+import uk.co.accio.jenkins.bpl.dsl.AbstractDslTester
 
-class GrailsSpec extends UnitSpec {
+class GrailsSpec extends AbstractDslTester {
 
     def setupSpec() {
-        XMLUnit.setIgnoreWhitespace(true)
-        XMLUnit.setNormalizeWhitespace(true)
-        XMLUnit.setNormalize(true)
+        delegateClass = GrailsDelegate
+        rootName = GrailsDelegate.name
     }
 
     def grailsBuilderXml = '''\
@@ -54,15 +50,6 @@ class GrailsSpec extends UnitSpec {
             xmlDiff.similar()
     }
 
-    String toXml(object) {
-        def writer = new StringWriter()
-        def builder = new StreamingMarkupBuilder().bind {
-            out << object
-        }
-        writer << builder
-        return XmlUtil.serialize(writer.toString())
-    }
-
     def 'Full Grails Builder DSL'() {
 
         given:
@@ -86,35 +73,5 @@ class GrailsSpec extends UnitSpec {
 
         then:
             xmlDiff.similar()
-    }
-
-    def dslToXml(String dslText) {
-        def delegate
-        Script dslScript = new GroovyShell().parse(dslText)
-        dslScript.metaClass = createEMC(dslScript.class, {
-            ExpandoMetaClass emc ->
-                emc.grails = { Closure cl ->
-                    cl.delegate = new GrailsDelegate()
-                    cl.resolveStrategy = Closure.DELEGATE_FIRST
-                    cl()
-                    delegate = cl.delegate
-                }
-        })
-        dslScript.run()
-
-        def writer = new StringWriter()
-        def builder = new StreamingMarkupBuilder().bind {
-            mkp.xmlDeclaration()
-            out << delegate
-        }
-        writer << builder
-        return XmlUtil.serialize(writer.toString())
-    }
-    
-    static ExpandoMetaClass createEMC(Class clazz, Closure cl) {
-        ExpandoMetaClass emc = new ExpandoMetaClass(clazz, false)
-        cl(emc)
-        emc.initialize()
-        return emc
     }
 }

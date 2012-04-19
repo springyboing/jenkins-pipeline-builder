@@ -1,3 +1,22 @@
+h1.  Poll SCM Trigger
 
+h2. Purpose
+
+This trigger provides a cron-like feature to periodically check a projects SCM for changes. Once a change has been noticed the project is executed.
+
+h2. Description
+
+Usage:
+{code}
+triggers {
+    scm {
+        spec '5 * * * *'
+    }
+}
+{code}
+
+Required arguments:
+
+@spec@: This field follows the syntax of cron (with minor differences). Specifically, each line consists of 5 fields separated by TAB or whitespace:
 
 

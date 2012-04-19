@@ -11,6 +11,8 @@ package uk.co.accio.jenkins.dsl.builders
  */
 class ShellDelegate implements Buildable {
 
+    static String name = 'shell'
+
     String _topLevelElement = 'hudson.tasks.Shell'
     String command
 

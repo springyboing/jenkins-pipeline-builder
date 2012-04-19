@@ -7,25 +7,21 @@ import org.custommonkey.xmlunit.Diff
 import org.custommonkey.xmlunit.XMLUnit
 import uk.co.accio.jenkins.dsl.triggers.ScmDelegate
 import uk.co.accio.jenkins.dsl.triggers.TimerDelegate
+import uk.co.accio.jenkins.bpl.dsl.AbstractDslTester
 
-class TimerTriggerSpec extends UnitSpec {
+class TimerTriggerSpec extends AbstractDslTester {
 
-    def setupSpec() {
-        XMLUnit.setIgnoreWhitespace(true)
-        XMLUnit.setNormalizeWhitespace(true)
-        XMLUnit.setNormalize(true)
-    }
-
-    def scmTriggerXml = '''\
-<?xml version="1.0" encoding="UTF-8"?>
-<hudson.triggers.TimerTrigger>
-  <spec>5 * * * *</spec>
-</hudson.triggers.TimerTrigger>
-'''
+    Class delegateClass = TimerDelegate
+    String rootName = TimerDelegate.name
 
     def 'Timer Trigger XML'() {
 
         given:
+            def scmTriggerXml = '''\
+                    <?xml version="1.0" encoding="UTF-8"?>
+                    <hudson.triggers.TimerTrigger>
+                      <spec>5 * * * *</spec>
+                    </hudson.triggers.TimerTrigger>'''.stripIndent()
             def delegate = new TimerDelegate()
             delegate.spec = '5 * * * *'
 
@@ -37,12 +33,23 @@ class TimerTriggerSpec extends UnitSpec {
             xmlDiff.identical()
     }
 
-    String toXml(object) {
-        def writer = new StringWriter()
-        def builder = new StreamingMarkupBuilder().bind {
-            out << object
-        }
-        writer << builder
-        return XmlUtil.serialize(writer.toString())
+    def 'Timer Trigger DSL'() {
+
+        given:
+            def theDSL = '''\
+                timer {
+                    spec '5 * * * *'
+                }'''.stripIndent()
+            def timerTriggerXml = '''\
+                <?xml version="1.0" encoding="UTF-8"?>
+                <hudson.triggers.TimerTrigger>
+                    <spec>5 * * * *</spec>
+                </hudson.triggers.TimerTrigger>'''.stripIndent()
+        when:
+            def theXml = dslToXml(theDSL)
+            def xmlDiff = new Diff(theXml, XmlUtil.serialize(timerTriggerXml))
+
+        then:
+            xmlDiff.identical()
     }
 }

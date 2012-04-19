@@ -1,3 +1,22 @@
+h1.  Subversion Source Code Manager
 
+h2. Purpose
+
+This SCM provides access to a project held in a Subversion repository.
+
+h2. Description
+
+Usage:
+{code}
+scms {
+    svn {
+
+    }
+}
+{code}
+
+Required arguments:
+
+Optional arguments:
 
 

@@ -37,13 +37,15 @@ grails.project.dependency.resolution = {
             excludes "svn", 'nekohtml'
         }
         compile ":spock:0.6"
+        test ":auto-test:1.0.1"
     }
 }
 
-jenkins.host = '192.168.1.64'
+jenkins.host = 'tim-reddings-mac-mini.local'
 //jenkins.port = '8888'
 //jenkins.protocol = 'http'
 //jenkins.path = ''
-jenkins.includePlugins = ['extended-choice-parameter', 'AnsiColor']
+jenkins.pkifile = '/Users/timredding/.ssh/id_rsa'
+jenkins.includePlugins = ['extended-choice-parameter', 'AnsiColor', 'promoted-builds']
 jenkins.excludePlugins = ['setenv'] // Used to be required...  But must now be included in Jenkins.
 

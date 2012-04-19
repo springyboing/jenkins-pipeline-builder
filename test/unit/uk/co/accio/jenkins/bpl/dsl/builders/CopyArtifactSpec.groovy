@@ -1,23 +1,18 @@
 package uk.co.accio.jenkins.bpl.dsl.builders
 
-import grails.plugin.spock.UnitSpec
-import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil
-import org.custommonkey.xmlunit.DetailedDiff
 import org.custommonkey.xmlunit.Diff
-import org.custommonkey.xmlunit.Difference
-import org.custommonkey.xmlunit.XMLUnit
 import uk.co.accio.jenkins.dsl.builders.CopyArtifactDelegate
 import uk.co.accio.jenkins.dsl.builders.BuildSelector
 import uk.co.accio.jenkins.dsl.builders.SelectorDelegate
 import uk.co.accio.jenkins.dsl.builders.Permalink
+import uk.co.accio.jenkins.bpl.dsl.AbstractDslTester
 
-class CopyArtifactSpec extends UnitSpec {
+class CopyArtifactSpec extends AbstractDslTester {
 
     def setupSpec() {
-        XMLUnit.setIgnoreWhitespace(true)
-        XMLUnit.setNormalizeWhitespace(true)
-        XMLUnit.setNormalize(true)
+        delegateClass = CopyArtifactDelegate
+        rootName = CopyArtifactDelegate.name
     }
 
     def 'Copy from Latest successful build XML'() {
@@ -45,15 +40,6 @@ class CopyArtifactSpec extends UnitSpec {
 
         then:
             xmlDiff.identical()
-    }
-
-    String toXml(object) {
-        def writer = new StringWriter()
-        def builder = new StreamingMarkupBuilder().bind {
-            out << object
-        }
-        writer << builder
-        return XmlUtil.serialize(writer.toString())
     }
 
     def 'Copy from Latest successful build DSL'() {
@@ -557,35 +543,5 @@ class CopyArtifactSpec extends UnitSpec {
 
         then:
         xmlDiff.identical()
-    }
-
-    def dslToXml(String dslText) {
-        def delegate
-        Script dslScript = new GroovyShell().parse(dslText)
-        dslScript.metaClass = createEMC(dslScript.class, {
-            ExpandoMetaClass emc ->
-                emc.copyArtifact = { Closure cl ->
-                    cl.delegate = new CopyArtifactDelegate()
-                    cl.resolveStrategy = Closure.DELEGATE_FIRST
-                    cl()
-                    delegate = cl.delegate
-                }
-        })
-        dslScript.run()
-
-        def writer = new StringWriter()
-        def builder = new StreamingMarkupBuilder().bind {
-            mkp.xmlDeclaration()
-            out << delegate
-        }
-        writer << builder
-        return XmlUtil.serialize(writer.toString())
-    }
-
-    static ExpandoMetaClass createEMC(Class clazz, Closure cl) {
-        ExpandoMetaClass emc = new ExpandoMetaClass(clazz, false)
-        cl(emc)
-        emc.initialize()
-        return emc
     }
 }

@@ -14,6 +14,8 @@ package uk.co.accio.jenkins.dsl.builders
  */
 class GradleDelegate extends Gradle {
 
+    static String name = 'gradle'
+
     void name(name) {
         this._name = name
     }

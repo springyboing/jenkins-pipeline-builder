@@ -1,3 +1,20 @@
+h1.  Timer Trigger
 
+h2. Purpose
 
+This trigger provides a cron-like feature to periodically execute this project.
 
+h2. Description
+
+Usage:
+{code}
+triggers {
+    timer {
+        spec '5 * * * *'
+    }
+}
+{code}
+
+Required arguments:
+
+@spec@: This field follows the syntax of cron (with minor differences). Specifically, each line consists of 5 fields separated by TAB or whitespace:

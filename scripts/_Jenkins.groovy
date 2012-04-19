@@ -65,15 +65,14 @@ def getJenkinsUrl() {
 
 def runCliCommand(URL rootUrl, List<String> args, InputStream input = System.in, OutputStream output = System.out, OutputStream err = System.err) {
     
-	println "PKI: " + buildConfig.jenkins.pkifile
-	println "PKI File: " + new File(buildConfig.jenkins.pkifile).exists()
-	KeyPair keyPair = CLI.loadKey(new File(buildConfig.jenkins.pkifile))
-	
-	
+//	println "PKI: " + buildConfig.jenkins.pkifile
+//	println "PKI File: " + new File(buildConfig.jenkins.pkifile).exists()
+//	KeyPair keyPair = CLI.loadKey(new File(buildConfig.jenkins.pkifile), '6B7F2574DF68B9F')
+
 	CLI cli = new CLI(rootUrl)
-	if (keyPair) {
-		cli.authenticate(keyPair)
-	}
+//	if (keyPair) {
+//		cli.authenticate(keyPair)
+//	}
     cli.execute(args, input, output, err)
     cli.close()
 }

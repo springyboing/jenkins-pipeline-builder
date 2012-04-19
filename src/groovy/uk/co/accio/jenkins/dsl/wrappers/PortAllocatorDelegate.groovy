@@ -10,6 +10,8 @@ package uk.co.accio.jenkins.dsl.wrappers
  */
 class PortAllocatorDelegate implements Buildable {
 
+    static String name = 'portAllocator'
+
     String topLevelElement = 'org.jvnet.hudson.plugins.port__allocator.PortAllocator'
     def ports = []
 

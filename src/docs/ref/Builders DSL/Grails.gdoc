@@ -1,3 +1,52 @@
+h1. Grails Builder
 
+h2. Purpose
 
+Adds a build step for running Grails targets
 
+h2. Description
+
+Usage:
+{code}
+builders {
+    grails {
+        name '<Grails Installation>'
+        targets '<grails command>'
+        nonInteractive <true/false>
+        forceUpgrade <true/false>
+        serverPort '<server.port>'
+        grailsWorkDir '<grails.work.dir>'
+        projectWorkDir '<grails.project.dir>'
+        projectBaseDir '<Project Base Directory>'
+        properties '<Properties>'
+    }
+}
+{code}
+
+Required arguments:
+
+@target@: Specify target(s) to run separated by spaces (optional). To pass arguments to a particular target, surround the target and its arguments with double quotes
+
+Optional arguments:
+
+@name@: Name of your Grails installation. Defaults to '(Default)', same as Jenkins.
+
+@nonInteractive@: Append \--non-interactive to all build targets (values are true/false, default=true)
+
+@forceUpgrade@: Force upgrade to @name@ed version. Run 'grails upgrade \--non-interactive' before any specified @target@s. (values are true/false, default=false)
+
+@serverPort@: Specify a value for the gserver.port system property
+
+@grailsWorkDir@: Specify a value for the grails.project.dir system property
+
+@projectWorkDir@: Specify a value for the grails.project.work.dir system property
+
+@projectBaseDir@:  Specify a path to the root of the Grails project
+
+@properties@: Properties needed by your Grails build can be specified here (in the standard properties file format):
+{code}
+# comment
+name1=value1
+name2=value2
+{code}
+These are passed to Grails like "-Dname1=value1 -Dname2=value2"

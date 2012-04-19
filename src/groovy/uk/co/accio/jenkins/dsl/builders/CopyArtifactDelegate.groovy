@@ -40,8 +40,7 @@ package uk.co.accio.jenkins.dsl.builders
  */
 class CopyArtifactDelegate implements Buildable {
 
-    CopyArtifactDelegate() {
-    }
+    static String name = 'copyArtifact'
 
     String topLevelElement = 'hudson.plugins.copyartifact.CopyArtifact'
     String projectName

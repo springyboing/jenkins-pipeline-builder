@@ -1,3 +1,60 @@
+h1.  Build Job
 
+h2. Purpose
 
+This specifies a Jenkins build job.
 
+h2. Description
+
+Usage:
+{code}
+buildJob('<Job Name>') {
+
+    description '<Description>'
+    keepDependencies
+    canRoam
+    disabled
+    blockBuildWhenDownstreamBuilding
+    blockBuildWhenUpstreamBuilding
+    concurrentBuild
+
+    scm {
+        ...
+    }
+    triggers {
+        ...
+    }
+    buildWrappers {
+        ...
+    }
+    builders {
+        ...
+    }
+    publishers {
+        ...
+    }
+    extras {
+        ...
+    }
+}
+{code}
+
+Required arguments:
+
+@name@: Job name.
+
+Optional arguments:
+
+@description@: Job description
+
+@keepDependencies@: (values are true/false, default=false)
+
+@canRoam@: (values are true/false, default=false)
+
+@disabled@: Disable this job. (values are true/false, default=false)
+
+@blockBuildWhenDownstreamBuilding@: (values are true/false, default=false)
+
+@blockBuildWhenUpstreamBuilding@: (values are true/false, default=false)
+
+@concurrentBuild@: (values are true/false, default=false)

@@ -14,6 +14,8 @@ package uk.co.accio.jenkins.dsl.triggers
  */
 class TimerDelegate implements Buildable {
 
+    static String name = 'timer'
+
     String topLevelElement = 'hudson.triggers.TimerTrigger'
     String spec
 

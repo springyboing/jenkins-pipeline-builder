@@ -2,6 +2,8 @@ package uk.co.accio.jenkins.dsl.scms.git
 
 class GitDelegate implements Buildable {
 
+    static String name = 'git'
+
     String topLevelElement = 'hudson.plugins.git.GitSCM'
     Integer _configVersion = 2
     String _scmName = ''

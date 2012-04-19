@@ -1,3 +1,22 @@
+h1.  Git Source Code Manager
 
+h2. Purpose
+
+This SCM provides access to a project held in a Git repository.
+
+h2. Description
+
+Usage:
+{code}
+scms {
+    git {
+       
+    }
+}
+{code}
+
+Required arguments:
+
+Optional arguments:
 
 

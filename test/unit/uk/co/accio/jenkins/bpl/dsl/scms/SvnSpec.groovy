@@ -6,14 +6,12 @@ import groovy.xml.XmlUtil
 import org.custommonkey.xmlunit.Diff
 import org.custommonkey.xmlunit.XMLUnit
 import uk.co.accio.jenkins.dsl.scms.svn.SvnDelegate
+import uk.co.accio.jenkins.bpl.dsl.AbstractDslTester
 
-class SvnSpec extends UnitSpec {
+class SvnSpec extends AbstractDslTester {
 
-    def setupSpec() {
-        XMLUnit.setIgnoreWhitespace(true)
-        XMLUnit.setNormalizeWhitespace(true)
-        XMLUnit.setNormalize(true)
-    }
+    Class delegateClass = SvnDelegate
+    String rootName = SvnDelegate.name
 
     def svnScmXml = '''\
 <?xml version="1.0" encoding="UTF-8"?>
@@ -45,14 +43,4 @@ class SvnSpec extends UnitSpec {
         then:
             xmlDiff.identical()
     }
-
-    String toXml(object) {
-        def writer = new StringWriter()
-        def builder = new StreamingMarkupBuilder().bind {
-            out << object
-        }
-        writer << builder
-        return XmlUtil.serialize(writer.toString())
-    }
-
 }

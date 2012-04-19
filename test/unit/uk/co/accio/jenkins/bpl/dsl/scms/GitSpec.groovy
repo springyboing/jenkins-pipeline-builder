@@ -1,23 +1,19 @@
 package uk.co.accio.jenkins.bpl.dsl.scms
 
-import grails.plugin.spock.UnitSpec
-import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil
 import org.custommonkey.xmlunit.DetailedDiff
 import org.custommonkey.xmlunit.Diff
 import org.custommonkey.xmlunit.Difference
-import org.custommonkey.xmlunit.XMLUnit
 import uk.co.accio.jenkins.dsl.scms.git.GitBranchDelegate
 import uk.co.accio.jenkins.dsl.scms.git.GitDelegate
 import uk.co.accio.jenkins.dsl.scms.git.GitUserRemoteConfigDelegate
-import spock.lang.Ignore
+import uk.co.accio.jenkins.bpl.dsl.AbstractDslTester
 
-class GitSpec extends UnitSpec {
+class GitSpec extends AbstractDslTester {
 
     def setupSpec() {
-        XMLUnit.setIgnoreWhitespace(true)
-        XMLUnit.setNormalizeWhitespace(true)
-        XMLUnit.setNormalize(true)
+        delegateClass = GitDelegate
+        rootName = GitDelegate.name
     }
 
     def gitScmXml = '''\
@@ -78,27 +74,11 @@ class GitSpec extends UnitSpec {
         when:
             def theXml = toXml(delegate)
             def xmlDiff = new Diff(theXml, XmlUtil.serialize(gitScmXml))
-            DetailedDiff dd = new DetailedDiff(xmlDiff)
-            dd.getAllDifferences().each {
-                Difference d = (Difference) it
-                println('---------------------------------------------')
-                println(d)
-            }
 
         then:
             xmlDiff.identical()
     }
 
-    String toXml(object) {
-        def writer = new StringWriter()
-        def builder = new StreamingMarkupBuilder().bind {
-            out << object
-        }
-        writer << builder
-        return XmlUtil.serialize(writer.toString())
-    }
-
-    @Ignore
     def 'Full Git SCM DSL'() {
 
         given:
@@ -214,36 +194,4 @@ class GitSpec extends UnitSpec {
         then:
             xmlDiff.similar()
     }
-
-    def dslToXml(String dslText) {
-        def delegate
-        Script dslScript = new GroovyShell().parse(dslText)
-        dslScript.metaClass = createEMC(dslScript.class, {
-            ExpandoMetaClass emc ->
-                emc.git = { Closure cl ->
-                    cl.delegate = new GitDelegate()
-                    cl.resolveStrategy = Closure.DELEGATE_FIRST
-                    cl()
-                    delegate = cl.delegate
-                }
-        })
-        dslScript.run()
-
-        def writer = new StringWriter()
-        def builder = new StreamingMarkupBuilder().bind {
-            mkp.xmlDeclaration()
-            out << delegate
-        }
-        writer << builder
-        return XmlUtil.serialize(writer.toString())
-    }
-
-    static ExpandoMetaClass createEMC(Class clazz, Closure cl) {
-        ExpandoMetaClass emc = new ExpandoMetaClass(clazz, false)
-        cl(emc)
-        emc.initialize()
-        return emc
-    }
-
-
 }

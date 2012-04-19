@@ -13,6 +13,8 @@ package uk.co.accio.jenkins.dsl.scms.svn
  */
 class SvnDelegate implements Buildable {
 
+    static String name = 'svn'
+
     String topLevelElement = "hudson.scm.SubversionSCM"
     String excludedRegions
     String includedRegions

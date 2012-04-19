@@ -14,6 +14,8 @@ package uk.co.accio.jenkins.dsl.triggers
  */
 class ScmDelegate implements Buildable {
 
+    static String name = 'scm'
+
     String topLevelElement = 'hudson.triggers.SCMTrigger'
     String spec
 

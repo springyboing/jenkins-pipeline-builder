@@ -8,13 +8,15 @@ h2. Description
 
 Usage:
 {code}
-copyArtifact {
-    from '<job name>'
-    filterBy "<filter pattern>"
-    targetDir '<target dir>'
-    when {
-        selector '<build selector>' {
-        // extras depend on selector type
+builders {
+    copyArtifact {
+        from '<job name>'
+        filterBy '<filter pattern>'
+        targetDir '<target dir>'
+        when {
+            selector '<build selector>' {
+            // extras depend on selector type
+            }
         }
     }
 }
@@ -26,17 +28,28 @@ Required arguments:
 
 @when@: How to select the build to copy artifacts from, such as latest successful or stable build, or latest "keep forever" build. Other plugins may provide additional selections.
 
+{table}
+ *selector* | *description*                                     | *additional properties*
+ Status     | Copy from Latest successful build                 | stable (true/false)
+ Triggered  | Copy from Upstream build that triggered this job  | fallbackToLastSuccessful (true/false)
+ Saved      | Copy from Latest saved build (marked "keep forever") |
+ Permalink  | Copy Specified by permalink                       | permalink (see table of values bellow)
+ Specific   | Copy Specific build                               | buildNumber
+ Workspace  | Copy from WORKSPACE of latest completed build     |
+ Parameterized | Copy Specified by a build parameter            | parameterName
+{table}
+
 Optional arguments:
 
 @filteredBy@ (or filter): Relative paths to artifact(s) to copy or leave blank to copy all artifacts. Check the /artifact/ browser of a build to see the relative paths to use here, as the build page typically hides intermediate directories. Can use wildcards like module/dist/**/*.zip, and use comma (followed by optional whitespace) to separate multiple entries. See the _includes_ of Ant fileset for the exact format.
 
 @targetDir@ (or target): Target base directory for copy, or leave blank to use the workspace. Directory (and parent directories, if any) will be created if needed.
 
-@flatten@ (default=false):
+@flatten@: Flatten directories to ignore the directory structure of the artifacts in the source project and copy all matching artifacts directly into the specified target directory. By default the artifacts are copied in the same directory structure as the source project.  (values are true/false, default=false)
 
-@optional@ (default=false):
+@optional@: Optional allows this build to continue even if no build is found matching the "Which build" condition selected above, the build's workspace does not exist or is inaccessible, or no artifacts are found matching the specified pattern. By default this build step fails the build if no artifacts are copied. (values are true/false, default=false)
 
-h2. Example
+h2. Examples
 
 h3. Copy from Latest successful build
 {code}
@@ -91,7 +104,7 @@ copyArtifact {
 
 Required arguments:
 
-@permalink@: See below.
+@permalink@: See table below.
 
 {table}
  *permalink* | *Description*
@@ -116,7 +129,7 @@ copyArtifact {
 
 Required arguments:
 
-@buildNumber@:
+@buildNumber@: The build number of the selected build will be recorded in the environment for later build steps to reference. The name of the environment variable is COPYARTIFACT_BUILD_NUMBER_ with the source project name appended (in all uppercase, and characters other than A-Z replaced with underscore).
 
 h3. Copy from WORKSPACE of latest completed build
 {code}
@@ -141,4 +154,4 @@ copyArtifact {
 
 Required arguments:
 
-@parameterName@:
+@parameterName@: Name of the "build selector" parameter. A parameter with this name should be added in the build parameters section above. There is a special parameter type for choosing the build selector.

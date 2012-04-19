@@ -6,14 +6,12 @@ import groovy.xml.XmlUtil
 import org.custommonkey.xmlunit.Diff
 import org.custommonkey.xmlunit.XMLUnit
 import uk.co.accio.jenkins.dsl.triggers.ScmDelegate
+import uk.co.accio.jenkins.bpl.dsl.AbstractDslTester
 
-class ScmTriggerSpec extends UnitSpec {
+class ScmTriggerSpec extends AbstractDslTester {
 
-    def setupSpec() {
-        XMLUnit.setIgnoreWhitespace(true)
-        XMLUnit.setNormalizeWhitespace(true)
-        XMLUnit.setNormalize(true)
-    }
+    Class delegateClass = ScmDelegate
+    String rootName = ScmDelegate.name
 
     def 'Scm Trigger XML'() {
 
@@ -34,15 +32,6 @@ class ScmTriggerSpec extends UnitSpec {
             xmlDiff.identical()
     }
 
-    String toXml(object) {
-        def writer = new StringWriter()
-        def builder = new StreamingMarkupBuilder().bind {
-            out << object
-        }
-        writer << builder
-        return XmlUtil.serialize(writer.toString())
-    }
-
     def 'Minimal SCM Trigger DSL'() {
 
         given:
@@ -61,35 +50,5 @@ class ScmTriggerSpec extends UnitSpec {
 
         then:
             xmlDiff.identical()
-    }
-
-    def dslToXml(String dslText) {
-        def delegate
-        Script dslScript = new GroovyShell().parse(dslText)
-        dslScript.metaClass = createEMC(dslScript.class, {
-            ExpandoMetaClass emc ->
-                emc.scm = { Closure cl ->
-                    cl.delegate = new ScmDelegate()
-                    cl.resolveStrategy = Closure.DELEGATE_FIRST
-                    cl()
-                    delegate = cl.delegate
-                }
-        })
-        dslScript.run()
-
-        def writer = new StringWriter()
-        def builder = new StreamingMarkupBuilder().bind {
-            mkp.xmlDeclaration()
-            out << delegate
-        }
-        writer << builder
-        return XmlUtil.serialize(writer.toString())
-    }
-
-    static ExpandoMetaClass createEMC(Class clazz, Closure cl) {
-        ExpandoMetaClass emc = new ExpandoMetaClass(clazz, false)
-        cl(emc)
-        emc.initialize()
-        return emc
     }
 }
