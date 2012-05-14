@@ -2,14 +2,56 @@ h1. Groovy Builder
 
 h2. Purpose
 
-
+Execute Groovy code.
 
 h2. Description
 
 Usage:
+
+Execute groovy file -
 {code}
+builders {
+    groovy {
+        file 'HelloWorld.groovy'
+        name 'Default'
+        parameters 'A'
+        scriptParameters 'B'
+        properties 'C'
+        javaOpts 'D'
+        classPath 'E'
+    }
+}
+{code}
+
+Execute inline groovy script -
+{code}
+groovy {
+    script 'println "HelloWorld"'
+    name 'Default'
+    parameters 'A'
+    scriptParameters 'B'
+    properties 'C'
+    javaOpts 'D'
+    classPath 'E'
+}
 {code}
 
 Required arguments:
 
+@file@: Path of groovy file to execute. Can not be used with @script@ property.
+
+@script@:   Inline Groovy code to execute. Can not be used with @file@ property.
+
 Optional arguments:
+
+@name@:         Name of your Groovy installation. Defaults to '(Default)'.
+
+@parameters@:   Parameters for the Groovy executable.
+
+@scriptParameters@: These parameters will be passed to the script.
+
+@properties@:   Instead of passing properties using the -D parameter you can define them here.
+
+@javaOpts@:     Direct access to JAVA_OPTS. Properties allows only -D properties, while sometimes also other properties like -XX need to be setup. It can be done here. This line is appended at the end of JAVA_OPTS string.
+
+@classPath@:    Specify script classpath here. Each line is one class path item.

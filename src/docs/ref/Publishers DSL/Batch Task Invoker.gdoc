@@ -8,6 +8,17 @@ h2. Description
 
 Usage:
 {code}
+invokeBatchTasks {
+    task {
+        project 'BlurOne'
+        name 'TaskOne'
+    }
+    task {
+        project 'BlurTwo'
+        name 'TaskTwo'
+    }
+    threshold 'SUCCESS'
+}
 {code}
 
 Required arguments:

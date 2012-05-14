@@ -18,9 +18,9 @@ class Gradle implements Buildable {
     String _switches
     String _tasks
     String _rootBuildScriptDir
-    String _buildFile
+    String _buildFile = 'build.gradle'
     String _name = 'Default'
-    Boolean _useWrapper = false
+    Boolean _useWrapper = true
 
     def void build(GroovyObject builder){
         def obj = {

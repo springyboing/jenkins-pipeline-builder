@@ -8,6 +8,9 @@ h2. Description
 
 Usage:
 {code}
+buildPipelineTrigger {
+    downstreamProjectNames 'My Child Build'
+}
 {code}
 
 Required arguments:

@@ -2,14 +2,41 @@ h1. Gradle Builder
 
 h2. Purpose
 
-
+Execute a a Gradle build script.
 
 h2. Description
 
 Usage:
 {code}
+builders {
+    gradle {
+        name 'Default'
+        description 'Gradle build description'
+        switches 'B'
+        tasks 'compile'
+        rootBuildScriptDir './my-project'
+        buildFile 'build.gradle'
+        useWrapper true
+    }
+}
 {code}
 
 Required arguments:
 
+@tasks@:   Specify a list of Gradle tasks to be invoked.
+
 Optional arguments:
+
+@name@:    Name of the Gradle instance installed in Jenkins.  Usually first install is usually called 'Default'. (Only required if useWrapper is false)
+
+@description@:  Build step description.
+
+@switches@:    Specify a list of Gradle switches to be invoked, or leave it empty.
+
+@rootBuildScriptDir@:   Folder containing the location of build script.
+
+@buildFile@:   If your gradle build script is not named build.gradle, specify the gradle build name script.
+
+@useWrapper@:  Use the Gradle wrapper or delegate to the installed version of Gradle. Defaults to using the wrapper.  When using the wrapper the @name@ property is not required.
+
+

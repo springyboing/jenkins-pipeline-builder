@@ -9,28 +9,14 @@ package uk.co.accio.jenkins.dsl.builders
  shell "ls -lash"
  *
  */
-class ShellDelegate implements Buildable {
+class ShellDelegate extends Shell {
 
     static String name = 'shell'
-
-    String _topLevelElement = 'hudson.tasks.Shell'
-    String command
 
     void topLevelElement(tle) {
         this._topLevelElement = tle
     }
     void command(command) {
         this.command = command
-    }
-    
-    def void build(GroovyObject builder){
-        def obj = {
-            "${_topLevelElement}"([:]) {
-                'command'(command, [:])
-
-            }
-        }
-        obj.delegate = builder
-        obj()
     }
 }
