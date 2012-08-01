@@ -17,16 +17,12 @@ grails.project.dependency.resolution = {
         // from public Maven repositories
         mavenCentral()
         //mavenLocal()
-	    mavenRepo "http://maven.jenkins-ci.org/service/local/repositories/releases/content/"
-//        mavenRepo "http://snapshots.repository.codehaus.org"
-//        mavenRepo "http://repository.codehaus.org"
-//        mavenRepo "http://download.java.net/maven/2/"
-//        mavenRepo "http://repository.jboss.com/maven2/"
+        mavenRepo "http://maven.jenkins-ci.org/content/repositories/releases/"
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
-        
-	    build "org.jenkins-ci.main:cli:1.452" 
+
+        build "org.jenkins-ci.main:cli:1.476"
         compile 'xmlunit:xmlunit:1.3'
     }
 
@@ -37,7 +33,6 @@ grails.project.dependency.resolution = {
             excludes "svn", 'nekohtml'
         }
         compile ":spock:0.6"
-        test ":auto-test:1.0.1"
     }
 }
 
