@@ -1,4 +1,4 @@
-includeTargets << new File("${basedir}/scripts/_Jenkins.groovy")
+includeTargets << new File("${pluginSettings.getPluginInfoForName('jenkins-pipeline-builder').getPluginDir().getPath()}/scripts/_Jenkins.groovy")
 
 target(default: "Creates a build pipeline for the current Grails application") {
 

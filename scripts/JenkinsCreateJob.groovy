@@ -1,5 +1,5 @@
 includeTargets << grailsScript('_GrailsPackage')
-includeTargets << new File("$jenkinsPipelineBuilderPluginDir/scripts/_Jenkins.groovy")
+includeTargets << new File("${pluginSettings.getPluginInfoForName('jenkins-pipeline-builder').getPluginDir().getPath()}/scripts/_Jenkins.groovy")
 
 target(default: "Creates new Job on your Jenkins server") {
     depends(classpath, compile)

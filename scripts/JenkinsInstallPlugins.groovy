@@ -1,4 +1,4 @@
-includeTargets << new File("${basedir}/scripts/_Jenkins.groovy")
+includeTargets << new File("${pluginSettings.getPluginInfoForName('jenkins-pipeline-builder').getPluginDir().getPath()}/scripts/_Jenkins.groovy")
 
 jenkinsPluginList = ['grails','subversion','setenv','copyartifact','build-pipeline-plugin','jobConfigHistory','join']
 jenkinsPluginExtendedList = ['violations','batch-task','gradle','groovy','extended-choice-parameter', 'AnsiColor']

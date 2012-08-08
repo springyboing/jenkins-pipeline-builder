@@ -1,4 +1,4 @@
-includeTargets << new File("$jenkinsPipelineBuilderPluginDir/scripts/_Jenkins.groovy")
+includeTargets << new File("${pluginSettings.getPluginInfoForName('jenkins-pipeline-builder').getPluginDir().getPath()}/scripts/_Jenkins.groovy")
 
 target(default: "Execute Command Against Jenkins Server") {
     depends(parseArguments, classpath)
