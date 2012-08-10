@@ -7,6 +7,7 @@ import uk.co.accio.jenkins.dsl.wrappers.BuilderWrapperDelegate
 import uk.co.accio.jenkins.dsl.publishers.PublisherDelegate
 import uk.co.accio.jenkins.dsl.other.BatchTask
 import uk.co.accio.jenkins.dsl.other.ExtrasDelegate
+import uk.co.accio.jenkins.dsl.other.JdkDelegate
 
 class BuildJobDelegate extends BuildJob {
 
@@ -87,5 +88,13 @@ class BuildJobDelegate extends BuildJob {
         cl()
 
         extrasDelegate = cl.delegate
+    }
+
+    void jdk(Closure cl) {
+        cl.delegate = new JdkDelegate()
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        jdkDelegate = cl.delegate
     }
 }

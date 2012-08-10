@@ -21,6 +21,7 @@ class BuildJob implements Buildable {
     def buildWrapperDelegate
     def publisherDelegate
     def extrasDelegate
+    def jdkDelegate
 
     def void build(GroovyObject builder){
         def obj = {
@@ -29,11 +30,7 @@ class BuildJob implements Buildable {
                 description(description, [:])
                 'keepDependencies'(keepDependencies, [:])
                 if (extrasDelegate) {
-                    'properties'([:]) {
-                        out << extrasDelegate
-                    }
-                } else {
-                    'properties'(props, [:])
+                    out << extrasDelegate
                 }
                 if (scmDelegate) {
                     out << scmDelegate

@@ -2,7 +2,12 @@ package uk.co.accio.jenkins.dsl.scms.svn
 
 /**
  * <scm class="hudson.scm.SubversionSCM">
-    <locations/>
+    <locations>
+      <hudson.scm.SubversionSCM_-ModuleLocation>
+        <remote>http://vwrebuild.project.internal/repos/vw-configurator-api/trunk</remote>
+        <local>.</local>
+      </hudson.scm.SubversionSCM_-ModuleLocation>
+    </locations>
     <excludedRegions></excludedRegions>
     <includedRegions></includedRegions>
     <excludedUsers></excludedUsers>
@@ -11,16 +16,7 @@ package uk.co.accio.jenkins.dsl.scms.svn
     <workspaceUpdater class="hudson.scm.subversion.UpdateUpdater"/>
   </scm>
  */
-class SvnDelegate implements Buildable {
-
-    static String name = 'svn'
-
-    String topLevelElement = "hudson.scm.SubversionSCM"
-    String excludedRegions
-    String includedRegions
-    String excludedUsers
-    String excludedRevprop
-    String excludedCommitMessages
+class SvnDelegate extends Svn {
 
     void excludedRegions(excludedRegions) {
         this.excludedRegions = excludedRegions
@@ -39,19 +35,11 @@ class SvnDelegate implements Buildable {
         this.excludedCommitMessages = excludedCommitMessages
     }
 
-    def void build(GroovyObject builder){
-        def obj = {
-            "scm"(class: topLevelElement) {
-                locations([:])
-                excludedRegions(excludedRegions, [:])
-                includedRegions(includedRegions, [:])
-                excludedUsers(excludedUsers, [:])
-                excludedRevprop(excludedRevprop, [:])
-                excludedCommitMessages(excludedCommitMessages, [:])
-                workspaceUpdater(class: "hudson.scm.subversion.UpdateUpdater")
-            }
-        }
-        obj.delegate = builder
-        obj()
+    void location(Closure cl) {
+        cl.delegate = new LocationDelegate()
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        repoLocations << cl.delegate
     }
 }

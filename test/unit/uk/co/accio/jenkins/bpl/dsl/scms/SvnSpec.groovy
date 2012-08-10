@@ -7,6 +7,7 @@ import org.custommonkey.xmlunit.Diff
 import org.custommonkey.xmlunit.XMLUnit
 import uk.co.accio.jenkins.dsl.scms.svn.SvnDelegate
 import uk.co.accio.jenkins.bpl.dsl.AbstractDslTester
+import uk.co.accio.jenkins.dsl.scms.svn.Svn
 
 class SvnSpec extends AbstractDslTester {
 
@@ -42,5 +43,33 @@ class SvnSpec extends AbstractDslTester {
             
         then:
             xmlDiff.identical()
+    }
+
+     def 'Svn DSL to bean'() {
+
+        given:
+            def theDSL = '''\
+                svn {
+                        location {
+                            remote 'http://example.com/1'
+                            local '.'
+                        }
+                        location {
+                            remote 'http://example.com/2'
+                            local '.'
+                        }
+                        excludedRegions 'A'
+                        includedRegions 'B'
+                        excludedUsers 'C'
+                        excludedRevprop 'D'
+                        excludedCommitMessages 'E'
+                }'''.stripIndent()
+
+        when:
+            Svn svn = dslToObject(theDSL)
+
+        then:
+            svn.excludedCommitMessages == 'E'
+           
     }
 }

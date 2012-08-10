@@ -1,4 +1,3 @@
-import hudson.cli.CLI
 import java.security.KeyPair
 
 includeTargets << grailsScript("_GrailsArgParsing")
@@ -65,10 +64,10 @@ def getJenkinsUrl() {
 
 def runCliCommand(URL rootUrl, List<String> args, InputStream input = System.in, OutputStream output = System.out, OutputStream err = System.err) {
 
-    CLI cli = new CLI(rootUrl)	
+    hudson.cli.CLI cli = new hudson.cli.CLI(rootUrl)
     if (buildConfig.jenkins.pkifile && new File(buildConfig.jenkins.pkifile).exists()) {
 
-        KeyPair keyPair = CLI.loadKey(new File(buildConfig.jenkins.pkifile), buildConfig.jenkins.pkifile ?: null)
+        KeyPair keyPair = cli.loadKey(new File(buildConfig.jenkins.pkifile), buildConfig.jenkins.pkifile ?: null)
         if (keyPair) {
             cli.authenticate(keyPair)
         }
@@ -76,4 +75,3 @@ def runCliCommand(URL rootUrl, List<String> args, InputStream input = System.in,
     cli.execute(args, input, output, err)
     cli.close()
 }
-

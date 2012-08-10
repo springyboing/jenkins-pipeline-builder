@@ -22,22 +22,20 @@ grails.project.dependency.resolution = {
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
-        build "org.jenkins-ci.main:cli:1.476"
+        compile "org.jenkins-ci.main:cli:1.476"
         compile 'xmlunit:xmlunit:1.3'
     }
-
     plugins {
         build(":tomcat:$grailsVersion",
-              ":release:1.0.1") {
+              ":release:2.0.4") {
             export = false
-            excludes "svn", 'nekohtml'
         }
         compile ":spock:0.6"
     }
 }
 
-jenkins.host = 'tim-reddings-mac-mini.local'
-//jenkins.port = '8888'
+//jenkins.host = 'tim-reddings-mac-mini.local'
+jenkins.port = '6500'
 //jenkins.protocol = 'http'
 //jenkins.path = ''
 jenkins.pkifile = '/Users/timredding/.ssh/id_rsa'
