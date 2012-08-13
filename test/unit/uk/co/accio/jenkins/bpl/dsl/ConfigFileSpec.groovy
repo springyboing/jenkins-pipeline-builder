@@ -60,7 +60,6 @@ class ConfigFileSpec extends UnitSpec {
                   <actions/>
                   <description/>
                   <keepDependencies>false</keepDependencies>
-                  <properties/>
                   <scm class="hudson.scm.NullSCM"/>
                   <canRoam>false</canRoam>
                   <disabled>false</disabled>
@@ -96,7 +95,6 @@ class ConfigFileSpec extends UnitSpec {
                   <actions/>
                   <description/>
                   <keepDependencies>false</keepDependencies>
-                  <properties/>
                   <scm class="hudson.scm.NullSCM"/>
                   <canRoam>false</canRoam>
                   <disabled>false</disabled>

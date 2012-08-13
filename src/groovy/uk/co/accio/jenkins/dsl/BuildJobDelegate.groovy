@@ -89,12 +89,4 @@ class BuildJobDelegate extends BuildJob {
 
         extrasDelegate = cl.delegate
     }
-
-    void jdk(Closure cl) {
-        cl.delegate = new JdkDelegate()
-        cl.resolveStrategy = Closure.DELEGATE_FIRST
-        cl()
-
-        jdkDelegate = cl.delegate
-    }
 }

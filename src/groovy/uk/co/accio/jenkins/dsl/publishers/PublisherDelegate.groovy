@@ -1,5 +1,7 @@
 package uk.co.accio.jenkins.dsl.publishers
 
+import uk.co.accio.jenkins.dsl.publishers.parameterised.BuildTriggerDelegate as ParamBuildTriggerDelegate
+
 class PublisherDelegate implements Buildable {
 
     String topLevelElement = "publishers"
@@ -72,6 +74,14 @@ class PublisherDelegate implements Buildable {
 
     void invokeBatchTasks(Closure cl) {
         cl.delegate = new BatchTaskInvokerDelegate()
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+
+        publishers << cl.delegate
+    }
+
+    void parameterisedBuildTrigger(Closure cl) {
+        cl.delegate = new ParamBuildTriggerDelegate()
         cl.resolveStrategy = Closure.DELEGATE_FIRST
         cl()
 

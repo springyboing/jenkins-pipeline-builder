@@ -24,19 +24,13 @@ package uk.co.accio.jenkins.dsl.publishers
         <color>RED</color>
 
  */
-class BuildTriggerDelegate implements Buildable {
+
+class BuildTrigger implements Buildable {
 
     String topLevelElement = "hudson.tasks.BuildTrigger"
 
     String childProjects
     Threshold threshold = Threshold.SUCCESS
-
-    void childProjects(childProjects) {
-        this.childProjects = childProjects
-    }
-    void threshold(String threshold) {
-        this.threshold = threshold?.toUpperCase() as Threshold
-    }
 
     def void build(GroovyObject builder) {
         def obj = {
@@ -47,6 +41,16 @@ class BuildTriggerDelegate implements Buildable {
         }
         obj.delegate = builder
         obj()
+    }
+}
+
+class BuildTriggerDelegate extends BuildTrigger {
+
+    void childProjects(childProjects) {
+        this.childProjects = childProjects
+    }
+    void threshold(String threshold) {
+        this.threshold = threshold?.toUpperCase() as Threshold
     }
 }
 

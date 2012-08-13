@@ -62,7 +62,6 @@ class BuildJobSpec extends UnitSpec {
                   <actions/>
                   <description/>
                   <keepDependencies>false</keepDependencies>
-                  <properties/>
                   <scm class="hudson.scm.NullSCM"/>
                   <canRoam>false</canRoam>
                   <disabled>false</disabled>
@@ -79,6 +78,7 @@ class BuildJobSpec extends UnitSpec {
             def buildJob = dslToBuildJob(theDsl)
             def buildXml = toBuildConfig(buildJob)
             println buildXml
+            println configAsXml
             def xmlDiff = new Diff(configAsXml, buildXml)
 
         then:
@@ -102,7 +102,6 @@ class BuildJobSpec extends UnitSpec {
                   <actions/>
                   <description/>
                   <keepDependencies>false</keepDependencies>
-                  <properties/>
                   <scm class="hudson.scm.NullSCM"/>
                   <canRoam>false</canRoam>
                   <disabled>false</disabled>
@@ -149,7 +148,6 @@ class BuildJobSpec extends UnitSpec {
                   <actions/>
                   <description/>
                   <keepDependencies>false</keepDependencies>
-                  <properties/>
                   <scm class="hudson.plugins.git.GitSCM">
                     <configVersion>2</configVersion>
                     <userRemoteConfigs>
@@ -222,7 +220,6 @@ class BuildJobSpec extends UnitSpec {
                   <actions/>
                   <description/>
                   <keepDependencies>false</keepDependencies>
-                  <properties/>
                   <scm class="hudson.scm.NullSCM"/>
                   <canRoam>false</canRoam>
                   <disabled>false</disabled>
@@ -265,7 +262,6 @@ class BuildJobSpec extends UnitSpec {
                   <actions/>
                   <description/>
                   <keepDependencies>false</keepDependencies>
-                  <properties/>
                   <scm class="hudson.scm.NullSCM"/>
                   <canRoam>false</canRoam>
                   <disabled>false</disabled>
@@ -311,7 +307,6 @@ class BuildJobSpec extends UnitSpec {
                   <actions/>
                   <description/>
                   <keepDependencies>false</keepDependencies>
-                  <properties/>
                   <scm class="hudson.scm.NullSCM"/>
                   <canRoam>false</canRoam>
                   <disabled>false</disabled>

@@ -23,7 +23,7 @@ class SvnSpec extends AbstractDslTester {
     <excludedUsers>Joe</excludedUsers>
     <excludedRevprop>Boo</excludedRevprop>
     <excludedCommitMessages>Blur</excludedCommitMessages>
-    <workspaceUpdater class="hudson.scm.subversion.UpdateUpdater"/>
+    <workspaceUpdater class="hudson.scm.subversion.UpdateWithCleanUpdater"/>
   </scm>
 '''
 
