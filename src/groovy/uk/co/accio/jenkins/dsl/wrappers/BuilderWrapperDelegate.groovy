@@ -1,5 +1,7 @@
 package uk.co.accio.jenkins.dsl.wrappers
 
+import uk.co.accio.jenkins.dsl.Raw
+
 class BuilderWrapperDelegate implements Buildable {
 
     String topLevelElement = 'buildWrappers'
@@ -13,6 +15,10 @@ class BuilderWrapperDelegate implements Buildable {
 
         wrappers << cl.delegate
         println "PortAllocator: "
+    }
+
+    void raw(String value) {
+        wrappers << new Raw(value: value)
     }
 
     def void build(GroovyObject builder) {

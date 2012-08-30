@@ -1,6 +1,7 @@
 package uk.co.accio.jenkins.dsl.other
 
 import uk.co.accio.jenkins.dsl.other.parameterize.ParameterizeDelegate
+import uk.co.accio.jenkins.dsl.Raw
 
 class ExtrasDelegate implements Buildable {
 
@@ -29,6 +30,10 @@ class ExtrasDelegate implements Buildable {
         cl()
 
         jdkDelegate = cl.delegate
+    }
+
+    void rawProperties(String raw) {
+        extras << new Raw(value: raw)
     }
 
     def void build(GroovyObject builder){

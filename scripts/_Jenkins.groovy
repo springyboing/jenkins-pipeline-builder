@@ -1,4 +1,8 @@
 import java.security.KeyPair
+import java.util.logging.Logger
+import java.nio.channels.Channel
+import java.util.logging.ConsoleHandler
+import java.util.logging.Level
 
 includeTargets << grailsScript("_GrailsArgParsing")
 includeTargets << grailsScript("_GrailsClasspath")
@@ -63,6 +67,16 @@ def getJenkinsUrl() {
 }
 
 def runCliCommand(URL rootUrl, List<String> args, InputStream input = System.in, OutputStream output = System.out, OutputStream err = System.err) {
+
+    println "URL: " + getJenkinsUrl()
+    Logger l = Logger.getLogger( 'hudson.remoting');
+    l.setLevel(Level.ALL);
+    ConsoleHandler h = new ConsoleHandler();
+    h.setLevel(Level.ALL);
+    l.addHandler(h);
+    l = Logger.getLogger('hudson.cli');
+    l.setLevel(Level.ALL);
+    l.addHandler(h);
 
     hudson.cli.CLI cli = new hudson.cli.CLI(rootUrl)
     if (buildConfig.jenkins.pkifile && new File(buildConfig.jenkins.pkifile).exists()) {

@@ -1,5 +1,7 @@
 package uk.co.accio.jenkins.dsl.builders
 
+import uk.co.accio.jenkins.dsl.Raw
+
 class BuilderDelegate implements Buildable {
 
     String topLevelElement = 'builders'
@@ -43,6 +45,10 @@ class BuilderDelegate implements Buildable {
         cl()
 
         builders << cl.delegate
+    }
+
+    void rawBuilder(String raw) {
+        builders << new Raw(value: raw)
     }
 
     def void build(GroovyObject builder) {
