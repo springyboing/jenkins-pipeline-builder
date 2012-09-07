@@ -1,6 +1,7 @@
 package uk.co.accio.jenkins.dsl.publishers
 
 import uk.co.accio.jenkins.dsl.publishers.parameterised.BuildTriggerDelegate as ParamBuildTriggerDelegate
+import uk.co.accio.jenkins.dsl.Raw
 
 class PublisherDelegate implements Buildable {
 
@@ -86,6 +87,10 @@ class PublisherDelegate implements Buildable {
         cl()
 
         publishers << cl.delegate
+    }
+
+    void raw(String raw) {
+        publishers << new Raw(value: raw)
     }
 
     def void build(GroovyObject builder){
