@@ -12,6 +12,7 @@ class ListSubversionTagsParam implements Buildable {
     Boolean _reverseByDate = false
     Boolean _reverseByName = false
     String _maxTags
+    String _uuid
     String _defaultValue
 
     def void build(GroovyObject builder) {
@@ -25,6 +26,7 @@ class ListSubversionTagsParam implements Buildable {
                 'reverseByName'(_reverseByName, [:])
                 'defaultValue'(_defaultValue, [:])
                 'maxTags'(_maxTags, [:])
+                'uuid'(_uuid, [:])
             }
         }
         obj.delegate = builder
@@ -58,5 +60,8 @@ class ListSubversionTagsParamDelegate extends ListSubversionTagsParam {
     }
     void maxTags(value) {
         this._maxTags = value
+    }
+    void uuid(value) {
+        this._uuid = value
     }
 }
