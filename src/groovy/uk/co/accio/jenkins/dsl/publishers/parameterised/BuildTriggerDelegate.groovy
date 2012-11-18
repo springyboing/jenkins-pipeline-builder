@@ -2,6 +2,7 @@ package uk.co.accio.jenkins.dsl.publishers.parameterised
 
 import uk.co.accio.jenkins.dsl.publishers.parameterised.config.SubversionRevisionBuildParameters
 import uk.co.accio.jenkins.dsl.publishers.parameterised.config.CurrentBuildParameters
+import uk.co.accio.jenkins.dsl.publishers.parameterised.config.PredefinedBuildParameters
 
 class BuildTriggerDelegate extends BuildTrigger {
 
@@ -25,5 +26,12 @@ class BuildTriggerDelegate extends BuildTrigger {
 
     void currentBuildParams(Closure cl) {
          configs << new CurrentBuildParameters()
+    }
+
+    void predefinedBuildParams(Closure cl) {
+        cl.delegate = new PredefinedBuildParameters()
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+        configs << cl.delegate
     }
 }

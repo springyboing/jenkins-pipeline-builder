@@ -15,14 +15,14 @@ grails.project.dependency.resolution = {
         grailsCentral()
         // uncomment the below to enable remote dependency resolution
         // from public Maven repositories
-        mavenCentral()
-        //mavenLocal()
+        mavenLocal()
+		mavenCentral()
         mavenRepo "http://maven.jenkins-ci.org/content/repositories/releases/"
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
-        compile "org.jenkins-ci.main:cli:1.476"
+        provided "org.jenkins-ci.main:cli:1.476"
         compile 'xmlunit:xmlunit:1.3'
     }
     plugins {
@@ -30,7 +30,9 @@ grails.project.dependency.resolution = {
               ":release:2.0.4") {
             export = false
         }
-        compile ":spock:0.6"
+        test (":spock:0.6") {
+			export = false
+		}
     }
 }
 

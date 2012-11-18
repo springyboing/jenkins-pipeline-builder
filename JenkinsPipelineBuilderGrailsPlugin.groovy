@@ -1,6 +1,6 @@
 class JenkinsPipelineBuilderGrailsPlugin {
 
-    def version = "0.2.1"
+    def version = "0.2.3"
     def grailsVersion = "1.3.7 > *"
     def dependsOn = [:]
     def pluginExcludes = [
